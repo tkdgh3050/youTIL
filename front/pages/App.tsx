@@ -10,13 +10,13 @@ const App = () => {
   return (
     <>
       <GlobalStyle />
-      <Header />
       <BrowserRouter>
+        <Header />
         <Routes>
           <Route path="/" element={<LandingPage />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
-      <Footer />
     </>
   )
 }
