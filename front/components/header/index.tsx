@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -20,6 +20,10 @@ const Header = () => {
   const [IsSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    document.title = 'YouTIL'
+  }, [])
+
   const openSidebar = useCallback(() => {
     setIsSidebarOpen(true);
     if (sidebarRef.current) {
@@ -37,7 +41,7 @@ const Header = () => {
         <span><Link to={'/'}>YouTIL</Link></span>
         <SidebarWrapper ref={sidebarRef} open={IsSidebarOpen} onBlur={closeSidebar} tabIndex={0}>
           {/* <span><Link to={'/'}>로그아웃</Link></span> */}
-          <span><Link to={'/'}>로그인</Link></span>
+          <span><Link to={'/login'}>로그인</Link></span>
           <span><Link to={'/'}>메인페이지</Link></span>
           <span><Link to={'/'}>공지사항</Link></span>
           <span><Link to={'/'}>내 노트</Link></span>

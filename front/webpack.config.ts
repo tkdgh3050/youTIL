@@ -41,6 +41,7 @@ const config: Configuration = {
     devMiddleware: { publicPath: "/dist" },
     static: { directory: path.resolve(__dirname) },
     hot: true,
+    historyApiFallback: true, //reloading 했을 때 react-router 가 404 뜨는 거 방지
   },
 };
 export default config;

@@ -6,6 +6,7 @@ import { GlobalStyle, RoutesWrapper } from './GlobalStyle';
 import Footer from '../components/footer';
 import Header from '../components/header';
 import LandingPage from './LandingPage';
+import LoginPage from './LoginPage';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Header />
         <RoutesWrapper>
           <Routes>
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<LandingPage />} />
           </Routes>
         </RoutesWrapper>
