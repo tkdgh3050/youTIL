@@ -1,6 +1,6 @@
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 
-const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   *, *::before, *::after {
     box-sizing:   border-box;
   }
@@ -23,6 +23,8 @@ const GlobalStyle = createGlobalStyle`
     --color-third:          #A0A8DF;
     --color-black:          #000000;
     --color-white:          #ffffff;
+    --color-gray:           #757575;
+    --color-gray-light:     #eeeeee;
 
     /* font size */
     --font-size-xs:   6px;
@@ -49,6 +51,20 @@ const GlobalStyle = createGlobalStyle`
     color: var(--color-white);
   }
 
+
+  hr {
+    margin: 0 var(--padding-size-m);
+    border-color: var(--color-gray-light);
+  }
+
+  ul, li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 `;
 
-export default GlobalStyle;
+export const RoutesWrapper = styled.div`
+  min-height: 74vh;
+  padding: var(--padding-size-m);
+`;
