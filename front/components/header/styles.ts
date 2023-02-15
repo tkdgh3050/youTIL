@@ -41,6 +41,7 @@ export const SidebarWrapper = styled.div<{ open: boolean }>`
   & span {
     line-height: 60px;
     margin-left: var(--padding-size-l);
+    border-bottom: 2px solid transparent;
     :hover {
       transition: 0.3s;
       border-bottom: 2px solid var(--color-primary);

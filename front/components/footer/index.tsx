@@ -1,8 +1,8 @@
-import React, { } from 'react';
+import React, { FunctionComponent } from 'react';
 
 import { Wrapper } from './styles';
 
-const Footer = () => {
+const Footer: FunctionComponent = () => {
   return (
     <>
       <hr />

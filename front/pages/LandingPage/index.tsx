@@ -1,6 +1,6 @@
-import React, { } from 'react';
+import React, { FunctionComponent } from 'react';
 
-const LandingPage = () => {
+const LandingPage: FunctionComponent = () => {
   return (
     <>
       <div>

@@ -7,8 +7,9 @@ import Footer from '../components/footer';
 import Header from '../components/header';
 import LandingPage from './LandingPage';
 import LoginPage from './LoginPage';
+import RegisterPage from './RegisterPage';
 
-const App = () => {
+const App: FunctionComponent = () => {
   return (
     <>
       <GlobalStyle />
@@ -16,6 +17,7 @@ const App = () => {
         <Header />
         <RoutesWrapper>
           <Routes>
+            <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<LandingPage />} />
           </Routes>

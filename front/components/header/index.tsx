@@ -1,22 +1,9 @@
-import React, { useCallback, useState, useRef, useEffect } from 'react';
+import React, { FunctionComponent, useCallback, useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 
 import { Wrapper, SidebarWrapper } from './styles';
 
-const StyledUl = styled.ul`
-  padding: var(--padding-size-m);
-  & li {
-    padding-bottom: var(--padding-size-s);
-    font-size: var(--font-size-m);
-    & a:hover{
-      color: var(--color-white);
-      transition: 0.2s;
-    }
-  }
-`;
-
-const Header = () => {
+const Header: FunctionComponent = () => {
   const [IsSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
