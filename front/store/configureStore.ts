@@ -1,19 +1,22 @@
-import { applyMiddleware, compose, createStore } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import createSagaMiddleware from "redux-saga";
+import { configureStore } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
+import logger from "redux-logger";
 
 import reducer from "../reducers";
-import rootSaga from "../sagas";
 
-const configureStore = () => {
-  const sagaMiddleware = createSagaMiddleware();
-  const middleWares = [sagaMiddleware];
-  const enhancer =
-    process.env.NODE_ENV === "production" ? compose(applyMiddleware(...middleWares)) : composeWithDevTools(applyMiddleware(...middleWares)); // 개발용
+const store = configureStore({
+  reducer,
+  middleware: getDefaultMiddleware => {
+    if (process.env.NODE_ENV === "development") {
+      return getDefaultMiddleware().concat(logger); // 개발 상태일 때 redux-logger 사용
+    } else {
+      return getDefaultMiddleware();
+    }
+  },
+  devTools: process.env.NODE_ENV !== "production",
+});
 
-  const store = createStore(reducer, enhancer);
-  sagaMiddleware.run(rootSaga);
-  return store;
-};
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch: () => AppDispatch = useDispatch;
 
-export default configureStore;
+export default store;

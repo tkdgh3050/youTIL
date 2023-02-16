@@ -5,9 +5,11 @@ import styled from 'styled-components';
 import { GlobalStyle, RoutesWrapper } from './GlobalStyle';
 import Footer from '../components/footer';
 import Header from '../components/header';
-import LandingPage from './LandingPage';
-import LoginPage from './LoginPage';
-import RegisterPage from './RegisterPage';
+import Landing from './LandingPage';
+import Login from './LoginPage';
+import Register from './RegisterPage';
+import Notice from './NoticePage';
+import MyNote from './MyNotePage';
 
 const App: FunctionComponent = () => {
   return (
@@ -17,9 +19,11 @@ const App: FunctionComponent = () => {
         <Header />
         <RoutesWrapper>
           <Routes>
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/" element={<LandingPage />} />
+            <Route path="/notice" element={<Notice />} />
+            <Route path="/myNote" element={<MyNote />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Landing />} />
           </Routes>
         </RoutesWrapper>
         <Footer />

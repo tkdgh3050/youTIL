@@ -1,10 +1,19 @@
-import React, { useState, useCallback, FunctionComponent } from 'react';
+import React, { useState, useCallback, FunctionComponent, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { userRegister } from '../../actions/user';
 
 import Title from '../../components/title';
+import { RootState } from '../../reducers';
+import { UserState } from '../../reducers/user';
+import { useAppDispatch } from '../../store/configureStore';
 import { ErrorDivWrapper, FormDivWrapper, FormWrapper } from '../LoginPage/styles';
 import { TermDivWrapper } from './styles';
 
 const RegisterPage: FunctionComponent = () => {
+  const user = useSelector<RootState, UserState>((state) => state.user);
+  const dispatch = useAppDispatch();
+  const navigator = useNavigate();
   const [Email, setEmail] = useState('');
   const [EmailError, setEmailError] = useState(false);
   const [Password, setPassword] = useState('');
@@ -13,6 +22,12 @@ const RegisterPage: FunctionComponent = () => {
   const [PasswordConfirmError, setPasswordConfirmError] = useState(false);
   const [Term, setTerm] = useState(false);
   const [TermError, setTermError] = useState(false);
+
+  useEffect(() => {
+    if (user.userInfo) {
+      navigator('/');
+    }
+  }, [user, user.userInfo]);
 
   const onChangeEmail = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -61,9 +76,26 @@ const RegisterPage: FunctionComponent = () => {
       return;
     }
 
-    console.log(Email, Password, PasswordConfirm, Term);
+    const register = dispatch(userRegister({
+      userEmail: Email,
+      userPassword: Password,
+      // userNickname: Ni
+    }));
+
+    register.unwrap()
+      .then((result) => {
+        console.log('result', result);
+        navigator('/login');
+      })
+      .catch((error) => {
+        console.log('err', error);
+      });
 
   }, [Email, Password, PasswordConfirm, Term]);
+
+  if (user.userInfo) {
+    return null;
+  }
 
   return (
     <>

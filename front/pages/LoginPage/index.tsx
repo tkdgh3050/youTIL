@@ -1,14 +1,28 @@
-import React, { useState, useCallback, FunctionComponent } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useCallback, FunctionComponent, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { userLogin } from '../../actions/user';
 
 import Title from '../../components/title';
+import { RootState } from '../../reducers';
+import { UserState } from '../../reducers/user';
+import { useAppDispatch } from '../../store/configureStore';
 import { ErrorDivWrapper, FormDivWrapper, FormWrapper, OperationDivWrapper } from './styles';
 
 const LoginPage: FunctionComponent = () => {
+  const user = useSelector<RootState, UserState>((state) => state.user);
+  const dispatch = useAppDispatch();
+  const navigator = useNavigate();
   const [Email, setEmail] = useState('');
   const [EmailError, setEmailError] = useState(false);
   const [Password, setPassword] = useState('');
   const [PasswordError, setPasswordError] = useState(false);
+
+  useEffect(() => {
+    if (user.userInfo) {
+      navigator('/');
+    }
+  }, [user, user.userInfo]);
 
   const onChangeEmail = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -21,9 +35,12 @@ const LoginPage: FunctionComponent = () => {
   const onSubmitUserLogin = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(Email, Password);
-
+    dispatch(userLogin({ userEmail: Email, userPassword: Password }));
   }, [Email, Password]);
 
+  if (user.userInfo) {
+    return null;
+  }
 
   return (
     <>
