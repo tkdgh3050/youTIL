@@ -10,10 +10,6 @@ export interface UserInfo {
   userEmail: string;
 }
 
-export interface MyError {
-  message: string;
-}
-
 export const userLogin = createAsyncThunk("user/login", async (data: UserData, thunkAPI) => {
   try {
     //const response = await axios.post("/user/login", data);
@@ -21,7 +17,6 @@ export const userLogin = createAsyncThunk("user/login", async (data: UserData, t
     const response = {
       data: {
         userEmail: "a@naver.com",
-        userNickname: "tkdgh3050",
       },
     };
     return response.data;
