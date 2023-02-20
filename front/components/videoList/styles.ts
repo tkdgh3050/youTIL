@@ -31,41 +31,10 @@ export const StyledButton = styled.button`
   }
 `;
 
-export const ListDivWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 80vw;
-  max-width: 800px;
-  border-bottom: 1px solid black;
-  padding: var(--padding-size-s);
-`;
-
-export const VideoListDivWrapper = styled.div`
-  padding: var(--padding-size-s) var(--padding-size-m);
-  display: none;
-  background-color: var(--color-gray-light);
-  margin: var(--padding-size-s);
-  &.active {
-    display: block;
-  }
-`;
-
-export const ListControlDivWrapper = styled.div`
+export const VideoControlDivWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  & .active {
-    & .fa-play {
-      transform: rotate(90deg);
-    }
-  }
-
-  @media screen and (max-width: 768px) {
-    flex-direction: column;
-    height: 65px;
-  }
-`;
-
-export const ListOperatorDivWrapper = styled.div`
-  display: flex;
+  border-bottom: 0.5px solid var(--color-gray);
+  padding: var(--padding-size-s);
 `;

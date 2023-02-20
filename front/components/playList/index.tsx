@@ -1,34 +1,40 @@
-import React, { FunctionComponent } from 'react';
-import { NoteData } from '../../actions/note';
+import React, { FunctionComponent, useCallback } from 'react';
 
+import { PlayList } from '../../actions/note';
+import VideoList from '../videoList/index';
 import {
   StyledButton, ListControlDivWrapper, ListDivWrapper,
-  ListOperatorDivWrapper, OverflowSpan, VideoControlDivWrapper,
-  VideoListDivWrapper
+  ListOperatorDivWrapper, OverflowSpan, VideoListDivWrapper
 } from './styles';
 
-const PlayList: FunctionComponent<{ data: NoteData }> = ({ data }) => {
+const PlayList: FunctionComponent<{ data: PlayList, clickAddVideoList(id: string): void }> = ({ data, clickAddVideoList }) => {
 
   const onClickToggle = (e: React.MouseEvent<HTMLDivElement>) => {
     e.currentTarget.classList.toggle('active');
     e.currentTarget.parentElement?.nextElementSibling?.classList.toggle('active');
   }
+
+  const onClickAddVideoListButton = useCallback(() => {
+    clickAddVideoList(data.id);
+  }, [data]);
+
   return (
     <ListDivWrapper>
       <ListControlDivWrapper>
         <OverflowSpan onClick={onClickToggle}>
           <i className="fa-solid fa-play"></i> &nbsp;
-          <span>목록11111111111111111111111111111111111111111111111111111111111111111111111111</span>
+          <span>{data.playListName}</span>
         </OverflowSpan>
         <ListOperatorDivWrapper>
-          <StyledButton className='primary'>동영상 추가</StyledButton>
+          <StyledButton className='primary' onClick={onClickAddVideoListButton}>동영상 추가</StyledButton>
           <StyledButton className='danger'>목록 삭제</StyledButton>
         </ListOperatorDivWrapper>
       </ListControlDivWrapper>
       <VideoListDivWrapper>
-        <VideoControlDivWrapper><OverflowSpan>동영상11111111111111111111</OverflowSpan><StyledButton className='danger'>삭제</StyledButton></VideoControlDivWrapper>
-        <VideoControlDivWrapper><OverflowSpan>동영상2</OverflowSpan><StyledButton className='danger'>삭제</StyledButton></VideoControlDivWrapper>
-        <VideoControlDivWrapper><OverflowSpan>동영상3</OverflowSpan><StyledButton className='danger'>삭제</StyledButton></VideoControlDivWrapper>
+        {data.videoList?.length
+          ? data.videoList.map((video) => <VideoList key={video.videoName + video.id} data={video} />)
+          : <div>동영상이 없습니다.</div>
+        }
       </VideoListDivWrapper>
     </ListDivWrapper>
   )
