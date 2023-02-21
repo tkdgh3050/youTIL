@@ -30,6 +30,10 @@ const config: Configuration = {
         loader: "ts-loader", //tsx 파일을 ts-loader를 사용해서 맞는 문법으로 변경
         exclude: path.join(__dirname, "node_modules"),
       },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      },
     ],
   },
   plugins: [new ReactRefreshPlugin(), new ForkTsCheckerWebpackPlugin()],

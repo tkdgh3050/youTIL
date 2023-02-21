@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { PlayList, lodePlayList, addPlayList, addVideoList, Video } from "../actions/note";
+import { PlayList, lodePlayList, addPlayList, addVideoList, deletePlayList, deleteVideo, Video, PlayListInVideo } from "../actions/note";
 
 export interface NoteState {
   playList: PlayList[] | null; //내 노트정보
@@ -10,9 +10,15 @@ export interface NoteState {
   addPlayListLoading: boolean; // 재생목록 추가
   addPlayListDone: boolean;
   addPlayListError: Error | null;
-  addVideoListLoading: boolean; // 재생목록 추가
+  addVideoListLoading: boolean; // 비디오 추가
   addVideoListDone: boolean;
   addVideoListError: Error | null;
+  deletePlayListLoading: boolean; // 재생목록 삭제
+  deletePlayListDone: boolean;
+  deletePlayListError: Error | null;
+  deleteVideoLoading: boolean; // 비디오 삭제
+  deleteVideoDone: boolean;
+  deleteVideoError: Error | null;
 }
 
 const initialState: NoteState = {
@@ -26,6 +32,12 @@ const initialState: NoteState = {
   addVideoListLoading: false, // 비디오 추가
   addVideoListDone: false,
   addVideoListError: null,
+  deletePlayListLoading: false, // 재생목록 삭제
+  deletePlayListDone: false,
+  deletePlayListError: null,
+  deleteVideoLoading: false, // 비디오 삭제
+  deleteVideoDone: false,
+  deleteVideoError: null,
 };
 
 const noteSlice = createSlice({
@@ -68,7 +80,6 @@ const noteSlice = createSlice({
     },
     [addVideoList.fulfilled.type]: (state, action: PayloadAction<Video>) => {
       const playList = state.playList?.find(v => v.id === action.payload.playListId);
-      console.log(action.payload.playListId);
       playList?.videoList?.unshift(action.payload);
       state.addVideoListLoading = false;
       state.addVideoListDone = true;
@@ -76,6 +87,42 @@ const noteSlice = createSlice({
     [addVideoList.rejected.type]: (state, action: PayloadAction<Error>) => {
       state.addVideoListLoading = false;
       state.addVideoListError = action.payload;
+    },
+    [deletePlayList.pending.type]: state => {
+      state.deletePlayListLoading = true;
+      state.deletePlayListDone = false;
+      state.deletePlayListError = null;
+    },
+    [deletePlayList.fulfilled.type]: (state, action: PayloadAction<string>) => {
+      if (state.playList) {
+        const newPlayList = state.playList.filter(v => v.id !== action.payload);
+        state.playList = newPlayList;
+      }
+      state.deletePlayListLoading = false;
+      state.deletePlayListDone = true;
+    },
+    [deletePlayList.rejected.type]: (state, action: PayloadAction<Error>) => {
+      state.deletePlayListLoading = false;
+      state.deletePlayListError = action.payload;
+    },
+    [deleteVideo.pending.type]: state => {
+      state.deleteVideoLoading = true;
+      state.deleteVideoDone = false;
+      state.deleteVideoError = null;
+    },
+    [deleteVideo.fulfilled.type]: (state, action: PayloadAction<PlayListInVideo>) => {
+      if (state.playList) {
+        const findPlayList = state.playList.find(v => v.id === action.payload.playListId);
+        if (findPlayList?.videoList) {
+          findPlayList.videoList = findPlayList.videoList.filter(v => v.id !== action.payload.videoId);
+        }
+      }
+      state.deleteVideoLoading = false;
+      state.deleteVideoDone = true;
+    },
+    [deleteVideo.rejected.type]: (state, action: PayloadAction<Error>) => {
+      state.deleteVideoLoading = false;
+      state.deleteVideoError = action.payload;
     },
   },
 });

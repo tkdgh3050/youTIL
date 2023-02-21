@@ -29,7 +29,7 @@ const exNote = [
   },
   {
     id: shortId.generate(),
-    playListName: "목록22222222",
+    playListName: "목록222222222222222222222222222222222222222",
     videoList: [
       {
         id: shortId.generate(),
@@ -59,6 +59,11 @@ export interface Video {
   textNote?: string;
   lastViewTime: string;
   playListId?: string;
+}
+
+export interface PlayListInVideo {
+  videoId: string;
+  playListId: string;
 }
 
 export const lodePlayList = createAsyncThunk("note/lodePlayList", async (_, thunkAPI) => {
@@ -102,6 +107,37 @@ export const addVideoList = createAsyncThunk("note/addVideoList", async (data: V
         videoName: data.videoName,
         videoURL: data.videoURL,
         lastViewTime: "",
+      },
+    };
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const err = error as AxiosError;
+      return thunkAPI.rejectWithValue(err.response?.data);
+    }
+  }
+});
+
+export const deletePlayList = createAsyncThunk("note/deletePlayList", async (data: string, thunkAPI) => {
+  try {
+    const response = {
+      data,
+    };
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const err = error as AxiosError;
+      return thunkAPI.rejectWithValue(err.response?.data);
+    }
+  }
+});
+
+export const deleteVideo = createAsyncThunk("note/deleteVideo", async (data: PlayListInVideo, thunkAPI) => {
+  try {
+    const response = {
+      data: {
+        videoId: data.videoId,
+        playListId: data.playListId,
       },
     };
     return response.data;

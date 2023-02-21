@@ -7,7 +7,13 @@ import {
   ListOperatorDivWrapper, OverflowSpan, VideoListDivWrapper
 } from './styles';
 
-const PlayList: FunctionComponent<{ data: PlayList, clickAddVideoList(id: string): void }> = ({ data, clickAddVideoList }) => {
+type propType = {
+  data: PlayList,
+  clickAddVideoList(id: string): void,
+  clickDeletePlayList(id: string, name: string): void,
+  clickDeleteVideo(id: string, name: string): void,
+};
+const PlayList: FunctionComponent<propType> = ({ data, clickAddVideoList, clickDeletePlayList, clickDeleteVideo }) => {
 
   const onClickToggle = (e: React.MouseEvent<HTMLDivElement>) => {
     e.currentTarget.classList.toggle('active');
@@ -16,6 +22,10 @@ const PlayList: FunctionComponent<{ data: PlayList, clickAddVideoList(id: string
 
   const onClickAddVideoListButton = useCallback(() => {
     clickAddVideoList(data.id);
+  }, [data]);
+
+  const onClickDeleteListButton = useCallback(() => {
+    clickDeletePlayList(data.id, data.playListName);
   }, [data]);
 
   return (
@@ -27,12 +37,12 @@ const PlayList: FunctionComponent<{ data: PlayList, clickAddVideoList(id: string
         </OverflowSpan>
         <ListOperatorDivWrapper>
           <StyledButton className='primary' onClick={onClickAddVideoListButton}>동영상 추가</StyledButton>
-          <StyledButton className='danger'>목록 삭제</StyledButton>
+          <StyledButton className='danger' onClick={onClickDeleteListButton}>목록 삭제</StyledButton>
         </ListOperatorDivWrapper>
       </ListControlDivWrapper>
       <VideoListDivWrapper>
         {data.videoList?.length
-          ? data.videoList.map((video) => <VideoList key={video.videoName + video.id} data={video} />)
+          ? data.videoList.map((video) => <VideoList key={video.videoName + video.id} data={video} clickDeleteVideo={clickDeleteVideo} playListId={data.id} />)
           : <div>동영상이 없습니다.</div>
         }
       </VideoListDivWrapper>

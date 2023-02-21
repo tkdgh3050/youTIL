@@ -4,6 +4,10 @@ export const OverflowSpan = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  :hover {
+    transition: all 0.3s;
+    color: var(--color-third);
+  }
 `;
 
 export const StyledButton = styled.button`

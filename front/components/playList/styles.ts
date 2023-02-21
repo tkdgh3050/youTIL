@@ -29,6 +29,14 @@ export const StyledButton = styled.button`
       color: var(--color-white);
     }
   }
+  &.normal {
+    transition: all 0.3s;
+    color: var(--color-gray);
+    &:hover {
+      background-color: var(--color-gray);
+      color: var(--color-white);
+    }
+  }
 `;
 
 export const ListDivWrapper = styled.div`

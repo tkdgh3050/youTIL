@@ -10,6 +10,7 @@ import Login from './LoginPage';
 import Register from './RegisterPage';
 import Notice from './NoticePage';
 import MyNote from './MyNotePage';
+import VideoView from './VideoViewPage';
 
 const App: FunctionComponent = () => {
   return (
@@ -19,6 +20,8 @@ const App: FunctionComponent = () => {
         <Header />
         <RoutesWrapper>
           <Routes>
+            {/* <Route path="/videoView/:videoId" element={<VideoView />} /> */}
+            <Route path="/videoView" element={<VideoView />} />
             <Route path="/notice" element={<Notice />} />
             <Route path="/myNote" element={<MyNote />} />
             <Route path="/register" element={<Register />} />

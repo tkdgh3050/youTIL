@@ -12,13 +12,17 @@ import {
 } from './styles';
 import PlayListFormDialog from '../../components/playListFormDialog';
 import VideoListFormDialog from '../../components/videoListFormDialog';
+import DeleteConfirmDialog, { deleteFlag } from '../../components/deleteConfirmDialog';
 
 const MyNote = () => {
   const note = useSelector<RootState, NoteState>((state) => state.note);
   const dispatch = useAppDispatch();
-  const addPlayListDialog = useRef<HTMLDialogElement>(null);
-  const addVideoListDialog = useRef<HTMLDialogElement>(null);
-  const [PlayListId, setPlayListId] = useState('');
+  const addPlayListDialogRef = useRef<HTMLDialogElement>(null);
+  const addVideoListDialogRef = useRef<HTMLDialogElement>(null);
+  const deleteConfirmDialogRef = useRef<HTMLDialogElement>(null);
+  const [ParamId, setParamId] = useState('');
+  const [DeleteFlag, setDeleteFlag] = useState<deleteFlag>('');
+  const [DeleteName, setDeleteName] = useState('');
 
   useEffect(() => {
     const req = dispatch(lodePlayList());
@@ -32,17 +36,35 @@ const MyNote = () => {
   }, []);
 
   const onClickAddPlayList = useCallback(() => {
-    if (addPlayListDialog.current) {
-      addPlayListDialog.current.showModal();
+    if (addPlayListDialogRef.current) {
+      addPlayListDialogRef.current.showModal();
     }
-  }, [addPlayListDialog]);
+  }, [addPlayListDialogRef]);
 
   const clickAddVideoList = useCallback((id: string) => {
-    if (addVideoListDialog.current) {
-      setPlayListId(id);
-      addVideoListDialog.current.showModal();
+    if (addVideoListDialogRef.current) {
+      setParamId(id);
+      addVideoListDialogRef.current.showModal();
     }
-  }, [addVideoListDialog]);
+  }, [addVideoListDialogRef]);
+
+  const clickDeletePlayList = useCallback((id: string, name: string) => {
+    if (deleteConfirmDialogRef.current) {
+      setDeleteFlag('playList');
+      setDeleteName(name);
+      setParamId(id);
+      deleteConfirmDialogRef.current.showModal();
+    }
+  }, [deleteConfirmDialogRef]);
+
+  const clickDeleteVideo = useCallback((id: string, name: string) => {
+    if (deleteConfirmDialogRef.current) {
+      setDeleteFlag('video');
+      setDeleteName(name);
+      setParamId(id);
+      deleteConfirmDialogRef.current.showModal();
+    }
+  }, [deleteConfirmDialogRef]);
 
   return (
     <>
@@ -52,13 +74,14 @@ const MyNote = () => {
           <span>내 재생목록</span>
           <StyledButton className='primary' onClick={onClickAddPlayList}>재생목록 추가</StyledButton>
         </AllListControlDivWrapper>
-        {note.playList
-          ? note.playList.map((data) => <PlayList key={data.playListName} data={data} clickAddVideoList={clickAddVideoList} />)
+        {note.playList?.length
+          ? note.playList.map((data) => <PlayList key={data.playListName} data={data} clickAddVideoList={clickAddVideoList} clickDeletePlayList={clickDeletePlayList} clickDeleteVideo={clickDeleteVideo} />)
           : <div>재생목록이 없습니다.</div>
         }
       </CenterDivWrapper>
-      <PlayListFormDialog addPlayListDialog={addPlayListDialog} />
-      <VideoListFormDialog addVideoListDialog={addVideoListDialog} id={PlayListId} />
+      <PlayListFormDialog addPlayListDialogRef={addPlayListDialogRef} />
+      <VideoListFormDialog addVideoListDialogRef={addVideoListDialogRef} id={ParamId} />
+      <DeleteConfirmDialog deleteConfirmDialogRef={deleteConfirmDialogRef} flag={DeleteFlag} id={ParamId} name={DeleteName} />
     </>
 
   )

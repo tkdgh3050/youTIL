@@ -12,10 +12,13 @@ export const DialogFormWrapper = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  & h3 {
+    margin-bottom: var(--padding-size-s);
+  }
   & input {
     font-size: var(--font-size-ms);
     line-height: 20px;
-    margin-bottom: var(--padding-size-s);
+    margin-top: var(--padding-size-s);
   }
 `;
 
