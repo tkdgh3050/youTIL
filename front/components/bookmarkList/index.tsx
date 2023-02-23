@@ -1,33 +1,35 @@
-import React from 'react'
-import styled from 'styled-components';
+import React, { useCallback, FunctionComponent, memo } from 'react'
+import { YouTubePlayer } from 'react-youtube';
+import { deleteBookmark } from '../../actions/note';
 import { OverflowSpan, StyledButton, VideoListDivWrapper } from '../../components/playList/styles';
+import { useAppDispatch } from '../../store/configureStore';
 import { VideoControlDivWrapper } from '../videoList/styles';
 
-const ListDivWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 90vw;
-  /* max-width: 800px; */
-  margin: var(--padding-size-m);
-`;
+import { ListDivWrapper, ListControlDivWrapper } from './styles';
 
-const ListControlDivWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  & .active {
-    & .fa-play {
-      transform: rotate(90deg);
-    }
-  }
-`
+const changeTimeStringToSeconds = (timeString: string) => {
+  const [hours, minutes, seconds] = timeString.split(':');
+  return Number(hours) * (60 ** 2) + Number(minutes) * 60 + Number(seconds);
+}
 
-const BookmarkList = () => {
+const BookmarkList: FunctionComponent<{ videoHandler: YouTubePlayer, bookmarks: string[] | undefined }> = memo(({ videoHandler, bookmarks }) => {
+  const dispatch = useAppDispatch();
 
-  const onClickToggle = (e: React.MouseEvent<HTMLDivElement>) => {
+  const onClickToggle = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.currentTarget.classList.toggle('active');
     e.currentTarget.parentElement?.nextElementSibling?.classList.toggle('active');
-  }
+  }, []);
+
+  const onClickBookmark = useCallback((e: React.MouseEvent<HTMLSpanElement>) => {
+    if (e.currentTarget.textContent) {
+      videoHandler.seekTo(changeTimeStringToSeconds(e.currentTarget.textContent));
+    }
+  }, [videoHandler]);
+
+  const onClickDeleteBookmark = useCallback((idx: number) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(idx);
+    dispatch(deleteBookmark(idx));
+  }, [videoHandler]);
 
   return (
     <ListDivWrapper>
@@ -38,21 +40,18 @@ const BookmarkList = () => {
         </OverflowSpan>
       </ListControlDivWrapper>
       <VideoListDivWrapper className='active'>
-        <VideoControlDivWrapper>
-          <OverflowSpan>00:00:12</OverflowSpan>
-          <StyledButton className='danger' >삭제</StyledButton>
-        </VideoControlDivWrapper>
-        <VideoControlDivWrapper>
-          <OverflowSpan>00:23:33</OverflowSpan>
-          <StyledButton className='danger' >삭제</StyledButton>
-        </VideoControlDivWrapper>
-        <VideoControlDivWrapper>
-          <OverflowSpan>00:32:11</OverflowSpan>
-          <StyledButton className='danger' >삭제</StyledButton>
-        </VideoControlDivWrapper>
+        {bookmarks?.length
+          ? bookmarks.map((v, i) => (
+            <VideoControlDivWrapper key={v + i}>
+              <OverflowSpan className='bookmarkSpanPointer' onClick={onClickBookmark}>{v}</OverflowSpan>
+              <StyledButton className='danger' onClick={onClickDeleteBookmark(i)}>삭제</StyledButton>
+            </VideoControlDivWrapper>
+          ))
+          : <div>북마크가 없습니다.</div>
+        }
       </VideoListDivWrapper>
     </ListDivWrapper>
   )
-};
+});
 
 export default BookmarkList;

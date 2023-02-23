@@ -56,7 +56,7 @@ export interface Video {
   videoURL: string;
   videoLength?: string;
   bookmarkList?: string[];
-  textNote?: string;
+  textNote?: Draft.RawDraftContentState;
   lastViewTime: string;
   playListId?: string;
 }
@@ -139,6 +139,78 @@ export const deleteVideo = createAsyncThunk("note/deleteVideo", async (data: Pla
         videoId: data.videoId,
         playListId: data.playListId,
       },
+    };
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const err = error as AxiosError;
+      return thunkAPI.rejectWithValue(err.response?.data);
+    }
+  }
+});
+
+export const loadVideoInfoData = createAsyncThunk("note/loadVideoInfoData", async (data: PlayListInVideo, thunkAPI) => {
+  try {
+    const response: { data: Video } = {
+      data: {
+        id: data.videoId,
+        videoName: "동영상1",
+        videoURL: "https://youtube.com/123",
+        videoLength: "00:12:30",
+        bookmarkList: [],
+        textNote: {
+          blocks: [
+            {
+              key: "5l1b5",
+              text: "asd",
+              type: "unstyled",
+              depth: 0,
+              inlineStyleRanges: [],
+              entityRanges: [],
+              data: {},
+            },
+            {
+              key: "7fko",
+              text: "qwerwq",
+              type: "unstyled",
+              depth: 0,
+              inlineStyleRanges: [],
+              entityRanges: [],
+              data: {},
+            },
+          ],
+          entityMap: {},
+        },
+        lastViewTime: "00:01:02",
+      },
+    };
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const err = error as AxiosError;
+      return thunkAPI.rejectWithValue(err.response?.data);
+    }
+  }
+});
+
+export const addBookmark = createAsyncThunk("note/addBookmark", async (data: string, thunkAPI) => {
+  try {
+    const response = {
+      data,
+    };
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const err = error as AxiosError;
+      return thunkAPI.rejectWithValue(err.response?.data);
+    }
+  }
+});
+
+export const deleteBookmark = createAsyncThunk("note/deleteBookmark", async (data: number, thunkAPI) => {
+  try {
+    const response = {
+      data,
     };
     return response.data;
   } catch (error) {

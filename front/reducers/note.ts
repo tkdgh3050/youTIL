@@ -1,9 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { PlayList, lodePlayList, addPlayList, addVideoList, deletePlayList, deleteVideo, Video, PlayListInVideo } from "../actions/note";
+import {
+  PlayList,
+  lodePlayList,
+  addPlayList,
+  addVideoList,
+  deletePlayList,
+  deleteVideo,
+  Video,
+  PlayListInVideo,
+  loadVideoInfoData,
+  addBookmark,
+  deleteBookmark,
+} from "../actions/note";
 
 export interface NoteState {
   playList: PlayList[] | null; //내 노트정보
+  videoInfo: Video | null;
   lodePlayListLoading: boolean; // 내 노트정보 불러오기
   lodePlayListDone: boolean;
   lodePlayListError: Error | null;
@@ -19,10 +32,20 @@ export interface NoteState {
   deleteVideoLoading: boolean; // 비디오 삭제
   deleteVideoDone: boolean;
   deleteVideoError: Error | null;
+  loadVideoInfoDataLoading: boolean; // 비디오정보 불러오기
+  loadVideoInfoDataDone: boolean;
+  loadVideoInfoDataError: Error | null;
+  addBookmarkLoading: boolean; // 북마크 추가
+  addBookmarkDone: boolean;
+  addBookmarkError: Error | null;
+  deleteBookmarkLoading: boolean; // 북마크 삭제
+  deleteBookmarkDone: boolean;
+  deleteBookmarkError: Error | null;
 }
 
 const initialState: NoteState = {
   playList: null, //내 노트정보
+  videoInfo: null, //비디오 정보
   lodePlayListLoading: false, // 내 노트정보 불러오기
   lodePlayListDone: false,
   lodePlayListError: null,
@@ -38,6 +61,15 @@ const initialState: NoteState = {
   deleteVideoLoading: false, // 비디오 삭제
   deleteVideoDone: false,
   deleteVideoError: null,
+  loadVideoInfoDataLoading: false, // 비디오정보 불러오기
+  loadVideoInfoDataDone: false,
+  loadVideoInfoDataError: null,
+  addBookmarkLoading: false, // 북마크 추가
+  addBookmarkDone: false,
+  addBookmarkError: null,
+  deleteBookmarkLoading: false, // 북마크 삭제
+  deleteBookmarkDone: false,
+  deleteBookmarkError: null,
 };
 
 const noteSlice = createSlice({
@@ -123,6 +155,53 @@ const noteSlice = createSlice({
     [deleteVideo.rejected.type]: (state, action: PayloadAction<Error>) => {
       state.deleteVideoLoading = false;
       state.deleteVideoError = action.payload;
+    },
+    [loadVideoInfoData.pending.type]: state => {
+      state.loadVideoInfoDataLoading = true;
+      state.loadVideoInfoDataDone = false;
+      state.loadVideoInfoDataError = null;
+    },
+    [loadVideoInfoData.fulfilled.type]: (state, action: PayloadAction<Video>) => {
+      state.videoInfo = action.payload;
+      state.loadVideoInfoDataLoading = false;
+      state.loadVideoInfoDataDone = true;
+    },
+    [loadVideoInfoData.rejected.type]: (state, action: PayloadAction<Error>) => {
+      state.loadVideoInfoDataLoading = false;
+      state.loadVideoInfoDataError = action.payload;
+    },
+    [addBookmark.pending.type]: state => {
+      state.addBookmarkLoading = true;
+      state.addBookmarkDone = false;
+      state.addBookmarkError = null;
+    },
+    [addBookmark.fulfilled.type]: (state, action: PayloadAction<string>) => {
+      if (state.videoInfo?.bookmarkList) {
+        state.videoInfo.bookmarkList.push(action.payload);
+        state.videoInfo.bookmarkList.sort();
+      }
+      state.addBookmarkLoading = false;
+      state.addBookmarkDone = true;
+    },
+    [addBookmark.rejected.type]: (state, action: PayloadAction<Error>) => {
+      state.addBookmarkLoading = false;
+      state.addBookmarkError = action.payload;
+    },
+    [deleteBookmark.pending.type]: state => {
+      state.deleteBookmarkLoading = true;
+      state.deleteBookmarkDone = false;
+      state.deleteBookmarkError = null;
+    },
+    [deleteBookmark.fulfilled.type]: (state, action: PayloadAction<number>) => {
+      if (state.videoInfo?.bookmarkList) {
+        state.videoInfo.bookmarkList = state.videoInfo.bookmarkList.filter((_, i) => i !== action.payload);
+      }
+      state.deleteBookmarkLoading = false;
+      state.deleteBookmarkDone = true;
+    },
+    [deleteBookmark.rejected.type]: (state, action: PayloadAction<Error>) => {
+      state.deleteBookmarkLoading = false;
+      state.deleteBookmarkError = action.payload;
     },
   },
 });
