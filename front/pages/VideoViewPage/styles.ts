@@ -19,7 +19,7 @@ export const VideoViewFlexWrapper = styled.div`
 `;
 
 export const LeftWrapper = styled.div`
-  flex: 1 1 50%;
+  flex: 1 1 70%;
   @media screen and (max-width: 768px) {
     width: 93vw;
     flex-direction: column;
@@ -39,9 +39,13 @@ export const VideoViewOperationDivWrapper = styled.div`
 `;
 
 export const EditorDivWrapper = styled.div`
-  flex: 1 1 50%;
-  .wrapper-class {
-    /* width: 50vw; */
+  flex: 1 1 30%;
+  padding-left: var(--padding-size-m);
+  @media screen and (max-width: 768px) {
+    padding-left: 0;
+    width: 93vw;
+  }
+  /* .wrapper-class {
     margin: 0 auto;
     margin-bottom: 4rem;
   }
@@ -50,5 +54,5 @@ export const EditorDivWrapper = styled.div`
     border: 1px solid #f1f1f1;
     padding: 5px;
     border-radius: 2px;
-  }
+  } */
 `;

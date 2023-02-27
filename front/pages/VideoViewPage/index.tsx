@@ -1,22 +1,26 @@
 import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import YouTube, { YouTubeEvent, YouTubeProps, YouTubePlayer } from 'react-youtube';
-import { ContentState, Editor, } from 'react-draft-wysiwyg';
-import { EditorState, convertFromRaw, convertFromHTML, Modifier } from 'draft-js';
-import html2canvas from 'html2canvas';
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { useSelector } from 'react-redux';
 
 import BookmarkList from '../../components/bookmarkList';
-import { StyledButton } from '../../components/playList/styles';
+import CustomTextEditor from '../../components/customTextEditor';
 import Title from '../../components/title';
+import { StyledButton } from '../../components/playList/styles';
 import { VideoViewFlexWrapper, LeftWrapper, VideoViewOperationDivWrapper, EditorDivWrapper } from './styles';
 import { useAppDispatch } from '../../store/configureStore';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../reducers';
 import { addBookmark, loadVideoInfoData, Video } from '../../actions/note';
 import { videoViewQueryString } from '../../components/videoList';
+import VideoViewContinueConfirmDialog from '../../components/videoViewContinueConfirmDialog';
 
-const changeSecondsToTimeString = (seconds: number) => {
+export const changeTimeStringToSeconds = (timeString: string) => {
+  const [hours, minutes, seconds] = timeString.split(':');
+  return Number(hours) * (60 ** 2) + Number(minutes) * 60 + Number(seconds);
+}
+
+export const changeSecondsToTimeString = (seconds: number) => {
   const hours = Math.trunc(seconds / 3600) < 10 ? '0' + Math.trunc(seconds / 3600) : Math.trunc(seconds / 3600).toString();
   const mins = Math.trunc((seconds % 3600) / 60) < 10 ? '0' + Math.trunc((seconds % 3600) / 60) : Math.trunc((seconds % 3600) / 60).toString();
   const secs = seconds % 60 < 10 ? '0' + Math.trunc(seconds % 60) : Math.trunc(seconds % 60).toString();
@@ -27,60 +31,66 @@ const VideoView = () => {
   const videoInfo = useSelector<RootState, Video | null>((state) => state.note.videoInfo);
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const [VideoId, setVideoId] = useState('');
+  const [ContinueTimestamp, setContinueTimestamp] = useState('');
+  const [VideoHandler, setVideoHandler] = useState<YouTubePlayer>();
+  const [TextNote, setTextNote] = useState<string>('');
+  const videoViewContinueConfirmDialogRef = useRef<HTMLDialogElement>(null);
   const queryString = useRef<videoViewQueryString>(location.state);
   const YoutubeTag = useRef<HTMLDivElement>(null);
-  const textEditorRef = useRef<Editor>(null);
-
-  const [StateEditor, setStateEditor] = useState(EditorState.createEmpty());
-  const [VideoId, setVideoId] = useState('');
-  const [VideoHandler, setVideoHandler] = useState<YouTubePlayer>();
-  const [TextNote, setTextNote] = useState<Draft.RawDraftContentState>();
-
-
-  useEffect(() => {
-    dispatch(loadVideoInfoData(queryString.current)).unwrap()
-      .then((result) => {
-        if (result?.textNote) {
-          setStateEditor(EditorState.createWithContent(convertFromRaw(result.textNote)));
-        }
-      });
-  }, []);
-
-  const opts: YouTubeProps['opts'] = {
+  const opts: YouTubeProps['opts'] = useRef({
     playerVars: {
       modestbranding: 1,
     }
-  };
+  });
+  const {
+    transcript,
+    finalTranscript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
+
+  useEffect(() => {
+    // 화면 들어올 때 재생 위치 저장한 것이 있는지 확인하여 있다면 해당 위치부터 시작할지 묻기
+    dispatch(loadVideoInfoData(queryString.current)).unwrap()
+      .then((result) => {
+        if (result?.textNote) {
+          setTextNote(result.textNote);
+        }
+        if (result?.lastViewTime && result.lastViewTime !== 0) {
+          setContinueTimestamp(changeSecondsToTimeString(result.lastViewTime));
+          videoViewContinueConfirmDialogRef.current?.showModal();
+        }
+      });
+  }, [videoViewContinueConfirmDialogRef]);
+
+  useEffect(() => {
+    return () => {
+      console.log('here');
+      //saveNoteData();
+    }
+  }, [])
+
+
+  useEffect(() => {
+    resetTranscript();
+  }, [finalTranscript]);
+
+  const saveNoteData = useCallback(() => {
+    console.log(TextNote);
+    console.log(VideoHandler.getCurrentTime());
+  }, [TextNote, VideoHandler]);
 
   const onReadyPlayer: YouTubeProps['onReady'] = useCallback((e: YouTubeEvent<any>) => {
     setVideoId('2zjoKjt97vQ');
     setVideoHandler(e.target);
   }, [VideoId]);
 
-  const addContentIntoTextEditor = useCallback((text) => {
-    const currentContent = StateEditor.getCurrentContent();
-    const currentSelection = StateEditor.getSelection();
-    const newContent = Modifier.replaceText(
-      currentContent,
-      currentSelection,
-      text,
-    );
-    setStateEditor(EditorState.push(StateEditor, newContent, 'insert-fragment'));
-  }, [StateEditor]);
-
   const onClickAddBookmark = useCallback(() => {
     const timeString = changeSecondsToTimeString(VideoHandler.getCurrentTime());
-    dispatch(addBookmark(timeString)).unwrap()
-      .then((result) => {
-        addContentIntoTextEditor('#' + timeString + " ");
-        textEditorRef.current?.focusEditor();
-      });
-  }, [VideoHandler, StateEditor]);
-
-  const onClickTakeScreenshot = useCallback(() => {
-    console.log('screen', TextNote);
-
-  }, [VideoHandler, YoutubeTag, TextNote]);
+    dispatch(addBookmark(timeString)).unwrap();
+  }, [VideoHandler]);
 
   const onClickBefore = useCallback(() => {
     if (VideoHandler) {
@@ -96,9 +106,17 @@ const VideoView = () => {
     }
   }, [VideoHandler]);
 
-  const onContentStateChange = useCallback((contentState: Draft.RawDraftContentState) => {
-    setTextNote(contentState);
+  const onClickStart = useCallback(() => {
+    SpeechRecognition.startListening({ continuous: true, language: 'ko' });
   }, []);
+
+  const onClickEnd = useCallback(() => {
+    SpeechRecognition.stopListening();
+  }, []);
+
+  const clickBookmark = useCallback((timestamp: string) => {
+    VideoHandler.seekTo(changeTimeStringToSeconds(timestamp));
+  }, [VideoHandler]);
 
   return (
     <>
@@ -112,30 +130,23 @@ const VideoView = () => {
           {/* operation buttons */}
           <VideoViewOperationDivWrapper>
             <StyledButton className='normal' onClick={onClickAddBookmark}>북마크 추가</StyledButton>
-            <StyledButton className='normal' onClick={onClickTakeScreenshot}>스크린샷</StyledButton>
+            {
+              listening
+                ? <StyledButton className='danger' onClick={onClickEnd}>STT 중단</StyledButton>
+                : <StyledButton className='normal' onClick={onClickStart}>STT 시작</StyledButton>
+            }
             <StyledButton className='normal' onClick={onClickBefore}>&nbsp;- 10초</StyledButton>
             <StyledButton className='normal' onClick={onClickAfter}>&nbsp;+ 10초</StyledButton>
           </VideoViewOperationDivWrapper>
           {/* bookmarks */}
-          <BookmarkList videoHandler={VideoHandler} bookmarks={videoInfo?.bookmarkList} />
+          <BookmarkList videoHandler={VideoHandler} bookmarks={videoInfo?.bookmarkList} clickBookmark={clickBookmark} />
         </LeftWrapper>
         {/* text editor */}
         <EditorDivWrapper>
-          <Editor
-            ref={textEditorRef}
-            editorState={StateEditor}
-            onEditorStateChange={setStateEditor}
-            wrapperClassName="wrapper-class"
-            editorClassName="editor"
-            toolbarClassName="toolbar-class"
-            placeholder="필기를 작성하세요!"
-            onContentStateChange={onContentStateChange}
-            localization={{
-              locale: 'ko',
-            }}
-          />
+          <CustomTextEditor finalTranscript={finalTranscript} textNote={TextNote} setTextNote={setTextNote} />
         </EditorDivWrapper>
       </VideoViewFlexWrapper>
+      <VideoViewContinueConfirmDialog videoViewContinueConfirmDialogRef={videoViewContinueConfirmDialogRef} timestamp={ContinueTimestamp} clickBookmark={clickBookmark} />
     </>
   )
 };

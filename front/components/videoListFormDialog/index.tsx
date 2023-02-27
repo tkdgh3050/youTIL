@@ -34,7 +34,7 @@ const VideoListFormDialog: FunctionComponent<{ addVideoListDialogRef: React.RefO
       setVideoURLError(true);
       return;
     }
-    dispatch(addVideoList({ playListId: id, id: '1', videoName: VideoName, videoURL: VideoURL, lastViewTime: '' }));
+    dispatch(addVideoList({ playListId: id, id: '1', videoName: VideoName, videoURL: VideoURL, lastViewTime: 0 }));
     addVideoListDialogRef.current?.close();
   }, [VideoName, VideoURL, addVideoListDialogRef]);
 

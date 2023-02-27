@@ -57,7 +57,7 @@ export const GlobalStyle = createGlobalStyle`
     border-color: var(--color-gray-light);
   }
 
-  ul, li {
+  ul:not( article * ), li:not( article * ) {
     list-style: none;
     padding: 0;
     margin: 0;

@@ -11,19 +11,19 @@ const exNote = [
         id: shortId.generate(),
         videoName: "동영상1",
         videoURL: "https://youtube.com/123",
-        videoLength: "00:12:30",
+        videoLength: 6000,
         bookmarkList: ["00:03:12", "00:04:13"],
         textNote: "adasdasdasdsad",
-        lastViewTime: "00:01:02",
+        lastViewTime: 0,
       },
       {
         id: shortId.generate(),
         videoName: "동영상2323232323",
         videoURL: "https://youtube.com/1234",
-        videoLength: "00:32:30",
+        videoLength: 8000,
         bookmarkList: ["00:03:12", "00:04:13", "00:12:13"],
         textNote: "adasdasdasdsad",
-        lastViewTime: "00:01:02",
+        lastViewTime: 23,
       },
     ],
   },
@@ -35,10 +35,10 @@ const exNote = [
         id: shortId.generate(),
         videoName: "동영상222222222222222222",
         videoURL: "https://youtube.com/1234567",
-        videoLength: "12:01:10",
+        videoLength: 10000,
         bookmarkList: ["00:03:12", "00:04:13"],
         textNote: "qqq",
-        lastViewTime: "00:00:00",
+        lastViewTime: 1000,
       },
     ],
   },
@@ -54,10 +54,10 @@ export interface Video {
   id: string;
   videoName: string;
   videoURL: string;
-  videoLength?: string;
+  videoLength?: number;
   bookmarkList?: string[];
-  textNote?: Draft.RawDraftContentState;
-  lastViewTime: string;
+  textNote?: string;
+  lastViewTime: number;
   playListId?: string;
 }
 
@@ -106,7 +106,7 @@ export const addVideoList = createAsyncThunk("note/addVideoList", async (data: V
         id: shortId.generate(),
         videoName: data.videoName,
         videoURL: data.videoURL,
-        lastViewTime: "",
+        lastViewTime: 0,
       },
     };
     return response.data;
@@ -156,32 +156,10 @@ export const loadVideoInfoData = createAsyncThunk("note/loadVideoInfoData", asyn
         id: data.videoId,
         videoName: "동영상1",
         videoURL: "https://youtube.com/123",
-        videoLength: "00:12:30",
-        bookmarkList: [],
-        textNote: {
-          blocks: [
-            {
-              key: "5l1b5",
-              text: "asd",
-              type: "unstyled",
-              depth: 0,
-              inlineStyleRanges: [],
-              entityRanges: [],
-              data: {},
-            },
-            {
-              key: "7fko",
-              text: "qwerwq",
-              type: "unstyled",
-              depth: 0,
-              inlineStyleRanges: [],
-              entityRanges: [],
-              data: {},
-            },
-          ],
-          entityMap: {},
-        },
-        lastViewTime: "00:01:02",
+        videoLength: 10000,
+        bookmarkList: ["00:12:23", "00:56:12"],
+        textNote: "<div>asdasd</div>",
+        lastViewTime: 123,
       },
     };
     return response.data;
