@@ -55,7 +55,7 @@ export interface Video {
   videoName: string;
   videoURL: string;
   videoLength?: number;
-  bookmarkList?: string[];
+  bookmarkList?: Bookmark[];
   textNote?: string;
   lastViewTime: number;
   playListId?: string;
@@ -64,6 +64,13 @@ export interface Video {
 export interface PlayListInVideo {
   videoId: string;
   playListId: string;
+}
+
+export interface Bookmark {
+  id: string;
+  time: number;
+  playListId: string;
+  videoId: string;
 }
 
 export const lodePlayList = createAsyncThunk("note/lodePlayList", async (_, thunkAPI) => {
@@ -157,9 +164,22 @@ export const loadVideoInfoData = createAsyncThunk("note/loadVideoInfoData", asyn
         videoName: "동영상1",
         videoURL: "https://youtube.com/123",
         videoLength: 10000,
-        bookmarkList: ["00:12:23", "00:56:12"],
+        bookmarkList: [
+          {
+            id: shortId.generate(),
+            time: 123,
+            playListId: data.playListId,
+            videoId: data.videoId,
+          },
+          {
+            id: shortId.generate(),
+            time: 345,
+            playListId: data.playListId,
+            videoId: data.videoId,
+          },
+        ],
         textNote: "<div>asdasd</div>",
-        lastViewTime: 123,
+        lastViewTime: 234,
       },
     };
     return response.data;
@@ -171,8 +191,28 @@ export const loadVideoInfoData = createAsyncThunk("note/loadVideoInfoData", asyn
   }
 });
 
-export const addBookmark = createAsyncThunk("note/addBookmark", async (data: string, thunkAPI) => {
+export const addBookmark = createAsyncThunk("note/addBookmark", async (data: { playListInVideo: PlayListInVideo; time: string }, thunkAPI) => {
   try {
+    const response = {
+      data: {
+        id: shortId.generate(),
+        time: data.time,
+        playListId: data.playListInVideo.playListId,
+        videoId: data.playListInVideo.videoId,
+      },
+    };
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const err = error as AxiosError;
+      return thunkAPI.rejectWithValue(err.response?.data);
+    }
+  }
+});
+
+export const deleteBookmark = createAsyncThunk("note/deleteBookmark", async (data: string, thunkAPI) => {
+  try {
+    // 해당하는 북마크 인덱스 삭제
     const response = {
       data,
     };
@@ -185,16 +225,22 @@ export const addBookmark = createAsyncThunk("note/addBookmark", async (data: str
   }
 });
 
-export const deleteBookmark = createAsyncThunk("note/deleteBookmark", async (data: number, thunkAPI) => {
-  try {
-    const response = {
-      data,
-    };
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const err = error as AxiosError;
-      return thunkAPI.rejectWithValue(err.response?.data);
+export const updateTextNoteLastViewTime = createAsyncThunk(
+  "note/updateTextNoteLastViewTime",
+  async (data: { playListInVideo: PlayListInVideo; textNote: string; lastViewTime: number }, thunkAPI) => {
+    try {
+      const response = {
+        data: {
+          textNote: data.textNote,
+          lastViewTime: data.lastViewTime,
+        },
+      };
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const err = error as AxiosError;
+        return thunkAPI.rejectWithValue(err.response?.data);
+      }
     }
   }
-});
+);

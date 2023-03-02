@@ -12,6 +12,8 @@ import {
   loadVideoInfoData,
   addBookmark,
   deleteBookmark,
+  updateTextNoteLastViewTime,
+  Bookmark,
 } from "../actions/note";
 
 export interface NoteState {
@@ -41,6 +43,9 @@ export interface NoteState {
   deleteBookmarkLoading: boolean; // 북마크 삭제
   deleteBookmarkDone: boolean;
   deleteBookmarkError: Error | null;
+  updateTextNoteLastViewTimeLoading: boolean; // 텍스트노트, 지금까지 본 시간 수정
+  updateTextNoteLastViewTimeDone: boolean;
+  updateTextNoteLastViewTimeError: Error | null;
 }
 
 const initialState: NoteState = {
@@ -70,6 +75,9 @@ const initialState: NoteState = {
   deleteBookmarkLoading: false, // 북마크 삭제
   deleteBookmarkDone: false,
   deleteBookmarkError: null,
+  updateTextNoteLastViewTimeLoading: false, // 텍스트노트, 지금까지 본 시간 수정
+  updateTextNoteLastViewTimeDone: false,
+  updateTextNoteLastViewTimeError: null,
 };
 
 const noteSlice = createSlice({
@@ -175,10 +183,10 @@ const noteSlice = createSlice({
       state.addBookmarkDone = false;
       state.addBookmarkError = null;
     },
-    [addBookmark.fulfilled.type]: (state, action: PayloadAction<string>) => {
+    [addBookmark.fulfilled.type]: (state, action: PayloadAction<Bookmark>) => {
       if (state.videoInfo?.bookmarkList) {
         state.videoInfo.bookmarkList.push(action.payload);
-        state.videoInfo.bookmarkList.sort();
+        state.videoInfo.bookmarkList.sort((a, b) => a.time - b.time);
       }
       state.addBookmarkLoading = false;
       state.addBookmarkDone = true;
@@ -192,9 +200,9 @@ const noteSlice = createSlice({
       state.deleteBookmarkDone = false;
       state.deleteBookmarkError = null;
     },
-    [deleteBookmark.fulfilled.type]: (state, action: PayloadAction<number>) => {
+    [deleteBookmark.fulfilled.type]: (state, action: PayloadAction<string>) => {
       if (state.videoInfo?.bookmarkList) {
-        state.videoInfo.bookmarkList = state.videoInfo.bookmarkList.filter((_, i) => i !== action.payload);
+        state.videoInfo.bookmarkList = state.videoInfo.bookmarkList.filter(v => v.id !== action.payload);
       }
       state.deleteBookmarkLoading = false;
       state.deleteBookmarkDone = true;
@@ -202,6 +210,23 @@ const noteSlice = createSlice({
     [deleteBookmark.rejected.type]: (state, action: PayloadAction<Error>) => {
       state.deleteBookmarkLoading = false;
       state.deleteBookmarkError = action.payload;
+    },
+    [updateTextNoteLastViewTime.pending.type]: state => {
+      state.updateTextNoteLastViewTimeLoading = true;
+      state.updateTextNoteLastViewTimeDone = false;
+      state.updateTextNoteLastViewTimeError = null;
+    },
+    [updateTextNoteLastViewTime.fulfilled.type]: (state, action: PayloadAction<{ textNote: string; lastViewTime: number }>) => {
+      if (state.videoInfo) {
+        state.videoInfo.lastViewTime = action.payload.lastViewTime;
+        state.videoInfo.textNote = action.payload.textNote;
+      }
+      state.updateTextNoteLastViewTimeLoading = false;
+      state.updateTextNoteLastViewTimeDone = true;
+    },
+    [updateTextNoteLastViewTime.rejected.type]: (state, action: PayloadAction<Error>) => {
+      state.updateTextNoteLastViewTimeLoading = false;
+      state.updateTextNoteLastViewTimeError = action.payload;
     },
   },
 });

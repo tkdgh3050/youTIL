@@ -3,13 +3,14 @@ import React, { FunctionComponent, useCallback } from 'react'
 import { DialogConfirmWrapper } from '../deleteConfirmDialog/styles';
 import { DialogMenuWrapper, DialogWrapper } from '../playListFormDialog/styles';
 import { StyledButton } from '../playList/styles';
+import { changeSecondsToTimeString } from '../../pages/VideoViewPage';
 
 type props = {
   videoViewContinueConfirmDialogRef: React.RefObject<HTMLDialogElement>
-  timestamp: string,
-  clickBookmark: (timestamp: string) => void,
+  time: number,
+  clickBookmark: (time: number) => void,
 }
-const VideoViewContinueConfirmDialog: FunctionComponent<props> = ({ videoViewContinueConfirmDialogRef, timestamp, clickBookmark }) => {
+const VideoViewContinueConfirmDialog: FunctionComponent<props> = ({ videoViewContinueConfirmDialogRef, time, clickBookmark }) => {
   const onClose = useCallback(() => {
     if (videoViewContinueConfirmDialogRef.current) {
       videoViewContinueConfirmDialogRef.current.close();
@@ -17,14 +18,14 @@ const VideoViewContinueConfirmDialog: FunctionComponent<props> = ({ videoViewCon
   }, [videoViewContinueConfirmDialogRef]);
 
   const onClickViewContinue = useCallback(() => {
-    clickBookmark(timestamp);
+    clickBookmark(time);
     onClose();
   }, [videoViewContinueConfirmDialogRef, clickBookmark]);
 
   return (
     <DialogWrapper ref={videoViewContinueConfirmDialogRef} >
       <DialogConfirmWrapper >
-        <h3>{timestamp}</h3>
+        <h3>{changeSecondsToTimeString(time)}</h3>
         <h3>부터 이어보시겠습니까?</h3>
         <DialogMenuWrapper>
           <StyledButton className='normal' type='button' onClick={onClose}>취소</StyledButton>

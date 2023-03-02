@@ -14,7 +14,7 @@ const CustomTextEditor: FunctionComponent<props> = ({ finalTranscript, textNote,
   const TextStateRef = useRef<HTMLElement | null>(null);
 
   const onChangeTextEditor = useCallback((e: ContentEditableEvent) => {
-    setTextNote(e.target.value);
+    setTextNote(DOMPurify.sanitize(e.target.value));
   }, []);
 
   const onClickOperation = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {

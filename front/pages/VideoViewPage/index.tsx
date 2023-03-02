@@ -11,7 +11,7 @@ import { StyledButton } from '../../components/playList/styles';
 import { VideoViewFlexWrapper, LeftWrapper, VideoViewOperationDivWrapper, EditorDivWrapper } from './styles';
 import { useAppDispatch } from '../../store/configureStore';
 import { RootState } from '../../reducers';
-import { addBookmark, loadVideoInfoData, Video } from '../../actions/note';
+import { addBookmark, loadVideoInfoData, updateTextNoteLastViewTime, Video } from '../../actions/note';
 import { videoViewQueryString } from '../../components/videoList';
 import VideoViewContinueConfirmDialog from '../../components/videoViewContinueConfirmDialog';
 
@@ -32,7 +32,7 @@ const VideoView = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const [VideoId, setVideoId] = useState('');
-  const [ContinueTimestamp, setContinueTimestamp] = useState('');
+  const [ContinueTime, setContinueTime] = useState<number>(0);
   const [VideoHandler, setVideoHandler] = useState<YouTubePlayer>();
   const [TextNote, setTextNote] = useState<string>('');
   const videoViewContinueConfirmDialogRef = useRef<HTMLDialogElement>(null);
@@ -59,7 +59,7 @@ const VideoView = () => {
           setTextNote(result.textNote);
         }
         if (result?.lastViewTime && result.lastViewTime !== 0) {
-          setContinueTimestamp(changeSecondsToTimeString(result.lastViewTime));
+          setContinueTime(result.lastViewTime);
           videoViewContinueConfirmDialogRef.current?.showModal();
         }
       });
@@ -67,10 +67,13 @@ const VideoView = () => {
 
   useEffect(() => {
     return () => {
-      console.log('here');
-      //saveNoteData();
+      if (VideoHandler) {
+        // 글 작성할 때마다 글 저장
+        // 나갈 때도 저장됨
+        saveNoteData();
+      }
     }
-  }, [])
+  }, [TextNote, VideoHandler]);
 
 
   useEffect(() => {
@@ -78,18 +81,32 @@ const VideoView = () => {
   }, [finalTranscript]);
 
   const saveNoteData = useCallback(() => {
+    // 현재 상태 저장 로직
     console.log(TextNote);
-    console.log(VideoHandler.getCurrentTime());
+    let now = VideoHandler.getCurrentTime();
+    const total = VideoHandler.getDuration();
+    if (total <= now) {
+      now = 0;
+    }
+    const data = {
+      textNote: TextNote,
+      lastViewTime: now,
+      playListInVideo: queryString.current
+    }
+    dispatch(updateTextNoteLastViewTime(data));
   }, [TextNote, VideoHandler]);
 
   const onReadyPlayer: YouTubeProps['onReady'] = useCallback((e: YouTubeEvent<any>) => {
-    setVideoId('2zjoKjt97vQ');
+    setVideoId('WX0vcKxhHV0');
     setVideoHandler(e.target);
   }, [VideoId]);
 
   const onClickAddBookmark = useCallback(() => {
-    const timeString = changeSecondsToTimeString(VideoHandler.getCurrentTime());
-    dispatch(addBookmark(timeString)).unwrap();
+    const data = {
+      time: VideoHandler.getCurrentTime(),
+      playListInVideo: queryString.current,
+    }
+    dispatch(addBookmark(data)).unwrap();
   }, [VideoHandler]);
 
   const onClickBefore = useCallback(() => {
@@ -114,8 +131,8 @@ const VideoView = () => {
     SpeechRecognition.stopListening();
   }, []);
 
-  const clickBookmark = useCallback((timestamp: string) => {
-    VideoHandler.seekTo(changeTimeStringToSeconds(timestamp));
+  const clickBookmark = useCallback((time: number) => {
+    VideoHandler.seekTo(time);
   }, [VideoHandler]);
 
   return (
@@ -146,7 +163,7 @@ const VideoView = () => {
           <CustomTextEditor finalTranscript={finalTranscript} textNote={TextNote} setTextNote={setTextNote} />
         </EditorDivWrapper>
       </VideoViewFlexWrapper>
-      <VideoViewContinueConfirmDialog videoViewContinueConfirmDialogRef={videoViewContinueConfirmDialogRef} timestamp={ContinueTimestamp} clickBookmark={clickBookmark} />
+      <VideoViewContinueConfirmDialog videoViewContinueConfirmDialogRef={videoViewContinueConfirmDialogRef} time={ContinueTime} clickBookmark={clickBookmark} />
     </>
   )
 };

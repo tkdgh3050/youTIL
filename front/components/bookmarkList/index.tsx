@@ -1,14 +1,15 @@
 import React, { useCallback, FunctionComponent, memo } from 'react'
 import { YouTubePlayer } from 'react-youtube';
-import { deleteBookmark } from '../../actions/note';
+import { Bookmark, deleteBookmark } from '../../actions/note';
 import { OverflowSpan, StyledButton, VideoListDivWrapper } from '../../components/playList/styles';
+import { changeSecondsToTimeString } from '../../pages/VideoViewPage';
 import { useAppDispatch } from '../../store/configureStore';
 import { VideoControlDivWrapper } from '../videoList/styles';
 
 import { ListDivWrapper, ListControlDivWrapper } from './styles';
 
 
-const BookmarkList: FunctionComponent<{ videoHandler: YouTubePlayer, bookmarks: string[] | undefined, clickBookmark: (timestamp: string) => void }> = memo(({ videoHandler, bookmarks, clickBookmark }) => {
+const BookmarkList: FunctionComponent<{ videoHandler: YouTubePlayer, bookmarks: Bookmark[] | undefined, clickBookmark: (time: number) => void }> = memo(({ videoHandler, bookmarks, clickBookmark }) => {
   const dispatch = useAppDispatch();
 
   const onClickToggle = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -16,15 +17,12 @@ const BookmarkList: FunctionComponent<{ videoHandler: YouTubePlayer, bookmarks: 
     e.currentTarget.parentElement?.nextElementSibling?.classList.toggle('active');
   }, []);
 
-  const onClickBookmark = useCallback((e: React.MouseEvent<HTMLSpanElement>) => {
-    if (e.currentTarget.textContent) {
-      clickBookmark(e.currentTarget.textContent);
-    }
+  const onClickBookmark = useCallback((time: number) => (e: React.MouseEvent<HTMLSpanElement>) => {
+    clickBookmark(time);
   }, [clickBookmark]);
 
-  const onClickDeleteBookmark = useCallback((idx: number) => (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(idx);
-    dispatch(deleteBookmark(idx));
+  const onClickDeleteBookmark = useCallback((id: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    dispatch(deleteBookmark(id));
   }, [videoHandler]);
 
   return (
@@ -38,9 +36,9 @@ const BookmarkList: FunctionComponent<{ videoHandler: YouTubePlayer, bookmarks: 
       <VideoListDivWrapper className='active'>
         {bookmarks?.length
           ? bookmarks.map((v, i) => (
-            <VideoControlDivWrapper key={v + i}>
-              <OverflowSpan className='bookmarkSpanPointer' onClick={onClickBookmark}>{v}</OverflowSpan>
-              <StyledButton className='danger' onClick={onClickDeleteBookmark(i)}>삭제</StyledButton>
+            <VideoControlDivWrapper key={v.id}>
+              <OverflowSpan className='bookmarkSpanPointer' onClick={onClickBookmark(v.time)}>{changeSecondsToTimeString(v.time)}</OverflowSpan>
+              <StyledButton className='danger' onClick={onClickDeleteBookmark(v.id)}>삭제</StyledButton>
             </VideoControlDivWrapper>
           ))
           : <div>북마크가 없습니다.</div>
