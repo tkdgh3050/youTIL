@@ -34,8 +34,7 @@ const LoginPage: FunctionComponent = () => {
 
   const onSubmitUserLogin = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(Email, Password);
-    dispatch(userLogin({ userEmail: Email, userPassword: Password }));
+    dispatch(userLogin({ email: Email, password: Password }));
   }, [Email, Password]);
 
   if (user.userInfo) {

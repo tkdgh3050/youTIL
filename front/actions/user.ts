@@ -2,12 +2,14 @@ import axios, { AxiosError } from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export interface UserData {
-  userEmail: string;
-  userPassword: string;
+  email: string;
+  password: string;
+  isAdmin?: boolean;
 }
 
 export interface UserInfo {
-  userEmail: string;
+  email: string;
+  isAdmin: boolean;
 }
 
 export const userLogin = createAsyncThunk("user/login", async (data: UserData, thunkAPI) => {
@@ -16,7 +18,8 @@ export const userLogin = createAsyncThunk("user/login", async (data: UserData, t
     console.log(data);
     const response = {
       data: {
-        userEmail: "a@naver.com",
+        email: "a@naver.com",
+        isAdmin: false,
       },
     };
     return response.data;

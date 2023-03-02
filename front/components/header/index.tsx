@@ -40,8 +40,7 @@ const Header: FunctionComponent = () => {
         <span><Link to={'/'}>YouTIL</Link></span>
         <SidebarWrapper ref={sidebarRef} open={IsSidebarOpen} onBlur={closeSidebar} tabIndex={0}>
           {user.userInfo
-            // ? <span><Link to={'/'} onClick={onClickLogout}>로그아웃</Link></span>
-            ? <span><Link to={'/login'}>로그인</Link></span>
+            ? <span><Link to={'/'} onClick={onClickLogout}>로그아웃</Link></span>
             : <span><Link to={'/login'}>로그인</Link></span>
           }
           <span><Link to={'/'}>메인페이지</Link></span>

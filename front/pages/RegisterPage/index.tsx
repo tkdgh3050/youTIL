@@ -77,9 +77,8 @@ const RegisterPage: FunctionComponent = () => {
     }
 
     const register = dispatch(userRegister({
-      userEmail: Email,
-      userPassword: Password,
-      // userNickname: Ni
+      email: Email,
+      password: Password,
     }));
 
     register.unwrap()
@@ -102,7 +101,7 @@ const RegisterPage: FunctionComponent = () => {
       <Title title={'회원가입'} />
       <FormDivWrapper>
         <FormWrapper onSubmit={onSubmitUserRegister}>
-          <input type="email" name="userEmail" placeholder='이메일' value={Email} onChange={onChangeEmail} />
+          <input type="email" name="email" placeholder='이메일' value={Email} onChange={onChangeEmail} />
           {EmailError && <ErrorDivWrapper>중복된 이메일이 존재합니다.</ErrorDivWrapper>}
 
           <input type="password" name="userPassword" placeholder='비밀번호 (8글자 ~ 20글자)' value={Password} onChange={onChangePassword} />
