@@ -83,11 +83,15 @@ const RegisterPage: FunctionComponent = () => {
 
     register.unwrap()
       .then((result) => {
-        console.log('result', result);
+        alert('회원가입이 완료되었습니다.');
         navigator('/login');
       })
-      .catch((error) => {
-        console.log('err', error);
+      .catch((error: { status: number, data: string }) => {
+        if (error.status === 403) {
+          setEmailError(true);
+        } else {
+          alert(`오류가 발생했습니다. 관리자에게 문의하세요. ${error.data}`);
+        }
       });
 
   }, [Email, Password, PasswordConfirm, Term]);

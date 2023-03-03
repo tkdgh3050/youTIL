@@ -2,10 +2,13 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import passport from "passport";
 
 import userRouter from "./routes/user";
+import passportConfig from "./passport";
 
 dotenv.config();
+passportConfig();
 const app = express();
 const port = 3065;
 
@@ -17,18 +20,18 @@ app.use(express.urlencoded({ extended: true })); //form 이 submit 되면 urlenc
 app.use(
   cors({
     origin: true, //들어올 수 있는 요청의 url 설정. true면 *과 비슷함
-    credentials: false, //실제 배포할 때는 true 로 변경해야함
+    credentials: true, //실제 배포할 때는 true 로 변경해야함
   })
 );
 
 app.use(morgan("dev")); //front server에서 요청했을 시 로그 남겨줌
+app.use(passport.initialize());
+app.use(passport.session());
+app.use("/user", userRouter);
 
 app.get("/", (req, res) => {
   res.send("hello express");
 });
-
-app.use("/user", userRouter);
-
 app.listen(port, () => {
   console.log(`listen ${port} ...`);
 });
