@@ -3,12 +3,13 @@ import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import passport from "passport";
+import session from "express-session";
+import cookieParser from "cookie-parser";
 
 import userRouter from "./routes/user";
 import passportConfig from "./passport";
 
 dotenv.config();
-passportConfig();
 const app = express();
 const port = 3065;
 
@@ -25,8 +26,17 @@ app.use(
 );
 
 app.use(morgan("dev")); //front server에서 요청했을 시 로그 남겨줌
+app.use(cookieParser(process.env.SECRET_COOKIE_KEY));
+app.use(
+  session({
+    saveUninitialized: false,
+    resave: false,
+    secret: process.env.SECRET_COOKIE_KEY!,
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
+passportConfig();
 app.use("/user", userRouter);
 
 app.get("/", (req, res) => {

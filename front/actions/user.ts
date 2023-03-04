@@ -18,19 +18,14 @@ export interface UserInfo {
 
 export const userLogin = createAsyncThunk("user/login", async (data: UserData, thunkAPI) => {
   try {
-    //const response = await axios.post("/user/login", data);
-    console.log(data);
-    const response = {
-      data: {
-        email: "a@naver.com",
-        isAdmin: false,
-      },
-    };
+    const response = await axios.post("/user/login", data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const err = error as AxiosError;
-      return thunkAPI.rejectWithValue(err.response?.data);
+      if (err.response) {
+        return thunkAPI.rejectWithValue({ status: err.response.status, data: err.response.data });
+      }
     }
   }
 });

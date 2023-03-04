@@ -1,17 +1,17 @@
 import express, { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
+import passport, { AuthenticateCallback } from "passport";
+
 import pool from "../database/pool";
 import { insertUser, selectUserOne } from "../database/UserQuery";
 import { user } from "../database/rowTypes";
+import { isLoggedInCheck, isNotLoggedInCheck } from "./middlewares";
 
 const router = express.Router();
 
 // 회원가입
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   //POST user/
-  console.log("POST user");
-  console.log(req.body);
-
   try {
     pool.query(selectUserOne, [req.body.email], async (err, rows: user[], fields) => {
       if (rows.length !== 0) {
@@ -28,7 +28,42 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-//뒤에 숫자는 10~13 사이로 쓰는데 높을수록 암호화 기능이 높음. 1초정도 걸리는 숫자로 세팅하면 좋음
-// const hashedPassword = await bcrypt.hash(req.body.password, 12);
+// 로그인
+router.post("/login", isNotLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  //POST user/login
+  try {
+    passport.authenticate("local", (err: any, user: Express.User, info: { message: any }) => {
+      if (err) {
+        //server err
+        console.error(err);
+        next(err);
+      }
+      if (info) {
+        //client err
+        if (info.message === "email") {
+          return res.status(401).send({ type: info.message, message: "존재하지 않는 이메일입니다." });
+        } else if (info.message === "password") {
+          return res.status(401).send({ type: info.message, message: "비밀번호가 일치하지 않습니다." });
+        } else {
+          return res.status(401).send({ type: info.message, message: "관리자에게 문의하세요." });
+        }
+      }
+      return req.login(user, async loginErr => {
+        if (loginErr) {
+          console.error(loginErr);
+          return next(loginErr);
+        }
+        const resData = {
+          email: user.email,
+          isAdmin: user.isAdmin,
+        };
+        return res.status(200).json(resData);
+      });
+    })(req, res, next);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
 
 export default router;

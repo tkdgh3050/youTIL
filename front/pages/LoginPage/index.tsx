@@ -34,7 +34,25 @@ const LoginPage: FunctionComponent = () => {
 
   const onSubmitUserLogin = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(userLogin({ email: Email, password: Password }));
+    setEmailError(false);
+    setPasswordError(false);
+    dispatch(userLogin({ email: Email, password: Password })).unwrap()
+      .then((result) => {
+        alert(`${result.email} 님 환영합니다.`);
+      })
+      .catch((error: { status: number, data: { type: string, message: string } }) => {
+        if (error.status === 401) {
+          if (error.data.type === 'email') {
+            setEmailError(true);
+          } else if (error.data.type === 'password') {
+            setPasswordError(true);
+          } else {
+            alert(`오류가 발생했습니다. 관리자에게 문의하세요. ${error.data.message}`);
+          }
+        } else {
+          alert(`오류가 발생했습니다. 관리자에게 문의하세요. ${error.data}`);
+        }
+      });
   }, [Email, Password]);
 
   if (user.userInfo) {
