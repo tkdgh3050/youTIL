@@ -41,7 +41,7 @@ const LoginPage: FunctionComponent = () => {
         alert(`${result.email} 님 환영합니다.`);
       })
       .catch((error: { status: number, data: { type: string, message: string } }) => {
-        if (error.status === 401) {
+        if (error.status === 400) {
           if (error.data.type === 'email') {
             setEmailError(true);
           } else if (error.data.type === 'password') {

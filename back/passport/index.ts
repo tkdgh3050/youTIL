@@ -3,7 +3,7 @@ import pool from "../database/pool";
 import bcrypt from "bcrypt";
 import { Strategy as LocalStrategy } from "passport-local";
 import { user } from "../database/rowTypes";
-import { selectUserOne } from "../database/UserQuery";
+import { selectUserOne, selectUserOneById } from "../database/UserQuery";
 
 // declare global {
 //   namespace Express {
@@ -16,12 +16,14 @@ export default () => {
     done(null, user.id);
   });
 
-  passport.deserializeUser(async (id, done) => {
+  passport.deserializeUser<number>(async (id, done) => {
     try {
-      pool.query(selectUserOne, [id], (err, rows: user[], fields) => {
+      pool.query(selectUserOneById, [id], (err, rows: user[], fields) => {
         done(null, rows[0]);
       });
     } catch (error) {
+      console.log("here");
+
       console.error(error);
       done(error);
     }

@@ -41,11 +41,11 @@ router.post("/login", isNotLoggedInCheck, async (req: Request, res: Response, ne
       if (info) {
         //client err
         if (info.message === "email") {
-          return res.status(401).send({ type: info.message, message: "존재하지 않는 이메일입니다." });
+          return res.status(400).send({ type: info.message, message: "존재하지 않는 이메일입니다." });
         } else if (info.message === "password") {
-          return res.status(401).send({ type: info.message, message: "비밀번호가 일치하지 않습니다." });
+          return res.status(400).send({ type: info.message, message: "비밀번호가 일치하지 않습니다." });
         } else {
-          return res.status(401).send({ type: info.message, message: "관리자에게 문의하세요." });
+          return res.status(400).send({ type: info.message, message: "관리자에게 문의하세요." });
         }
       }
       return req.login(user, async loginErr => {
@@ -64,6 +64,17 @@ router.post("/login", isNotLoggedInCheck, async (req: Request, res: Response, ne
     console.error(error);
     next(error);
   }
+});
+
+router.post("/logout", isLoggedInCheck, (req, res) => {
+  req.logout(err => {
+    //request 내부의 passport login정보 삭제
+    if (err) return res.status(500).send(err);
+  });
+  req.session.destroy(err => {
+    if (err) return res.status(500).send(err);
+  });
+  res.status(200).send({ message: "로그아웃을 완료 했습니다." });
 });
 
 export default router;

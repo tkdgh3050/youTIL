@@ -31,7 +31,13 @@ const Header: FunctionComponent = () => {
   }, [IsSidebarOpen]);
 
   const onClickLogout = useCallback(() => {
-    dispatch(userLogout());
+    dispatch(userLogout()).unwrap()
+      .then((result) => {
+        alert('로그아웃 하였습니다.');
+      })
+      .catch((err) => {
+        alert(`로그아웃에 실패하였습니다. 관리자에게 문의하세요 ${err}`)
+      })
   }, []);
 
   return (

@@ -31,13 +31,14 @@ export const userLogin = createAsyncThunk("user/login", async (data: UserData, t
 });
 
 export const userLogout = createAsyncThunk("user/logout", async (_, thunkAPI) => {
-  //const response = await axios.post("/user/logout");
   try {
-    console.log("logout");
+    await axios.post("/user/logout");
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const err = error as AxiosError;
-      return thunkAPI.rejectWithValue(err.response?.data);
+      if (err.response) {
+        return thunkAPI.rejectWithValue({ status: err.response.status, data: err.response.data });
+      }
     }
   }
 });
