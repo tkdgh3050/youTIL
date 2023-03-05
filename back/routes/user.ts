@@ -66,13 +66,19 @@ router.post("/login", isNotLoggedInCheck, async (req: Request, res: Response, ne
   }
 });
 
-router.post("/logout", isLoggedInCheck, (req, res) => {
+router.post("/logout", isLoggedInCheck, (req: Request, res: Response, next: NextFunction) => {
   req.logout(err => {
     //request 내부의 passport login정보 삭제
-    if (err) return res.status(500).send(err);
+    if (err) {
+      console.error(err);
+      return next(err);
+    }
   });
   req.session.destroy(err => {
-    if (err) return res.status(500).send(err);
+    if (err) {
+      console.error(err);
+      return next(err);
+    }
   });
   res.status(200).send({ message: "로그아웃을 완료 했습니다." });
 });
