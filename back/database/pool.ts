@@ -1,4 +1,4 @@
-import mysql, { PoolConnection } from "mysql2";
+import mysql, { PoolConnection } from "mysql2/promise";
 import { dbConfig } from "../config/dbConfig";
 
 const pool = mysql.createPool(dbConfig);
@@ -14,5 +14,7 @@ pool.on("enqueue", () => {
 pool.on("release", (conn: PoolConnection) => {
   console.log(`Conn release ${conn.threadId}`);
 });
+
+// const pool = dbPool.promise();
 
 export default pool;

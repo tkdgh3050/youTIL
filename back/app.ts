@@ -7,6 +7,7 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 
 import userRouter from "./routes/user";
+import noteRouter from "./routes/note";
 import passportConfig from "./passport";
 
 dotenv.config();
@@ -38,6 +39,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 passportConfig();
 app.use("/user", userRouter);
+app.use("/note", noteRouter);
 
 app.get("/", (req, res) => {
   res.send("hello express");

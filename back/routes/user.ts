@@ -13,14 +13,13 @@ const router = express.Router();
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   //POST user/
   try {
-    pool.query(selectUserOne, [req.body.email], async (err, rows: user[], fields) => {
-      if (rows.length !== 0) {
-        return res.status(403).send("이미 사용중인 이메일입니다.");
-      }
-      const hashedPassword = await bcrypt.hash(req.body.password, 12);
-      pool.query(insertUser, [req.body.email, hashedPassword], (err, rows, fields) => {
-        return res.status(201).send("회원가입 성공입니다.");
-      });
+    const [rows] = await pool.query<user[]>(selectUserOne, [req.body.email]);
+    if (rows.length !== 0) {
+      return res.status(403).send("이미 사용중인 이메일입니다.");
+    }
+    const hashedPassword = await bcrypt.hash(req.body.password, 12);
+    await pool.query(insertUser, [req.body.email, hashedPassword]).then(() => {
+      return res.status(201).send("회원가입 성공입니다.");
     });
   } catch (error) {
     console.error(error);

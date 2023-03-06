@@ -18,12 +18,9 @@ export default () => {
 
   passport.deserializeUser<number>(async (id, done) => {
     try {
-      pool.query(selectUserOneById, [id], (err, rows: user[], fields) => {
-        done(null, rows[0]);
-      });
+      const [user] = await pool.query<user[]>(selectUserOneById, [id]);
+      done(null, user[0]);
     } catch (error) {
-      console.log("here");
-
       console.error(error);
       done(error);
     }
@@ -39,16 +36,16 @@ export default () => {
       },
       async (email, password, done) => {
         try {
-          pool.query(selectUserOne, [email], async (err, rows: user[], fields) => {
-            if (rows.length === 0) {
-              return done(null, false, { message: "email" });
-            }
-            const result = await bcrypt.compare(password, rows[0].password);
-            if (result) {
-              return done(null, rows[0]);
-            }
+          const [user] = await pool.query<user[]>(selectUserOne, [email]);
+          if (user.length === 0) {
+            return done(null, false, { message: "email" });
+          }
+          const result = await bcrypt.compare(password, user[0].password);
+          if (result) {
+            return done(null, user[0]);
+          } else {
             return done(null, false, { message: "password" });
-          });
+          }
         } catch (error) {
           console.error(error);
           return done(error);

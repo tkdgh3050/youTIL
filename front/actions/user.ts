@@ -26,6 +26,8 @@ export const userLogin = createAsyncThunk("user/login", async (data: UserData, t
       if (err.response) {
         return thunkAPI.rejectWithValue({ status: err.response.status, data: err.response.data });
       }
+    } else {
+      throw error;
     }
   }
 });
@@ -39,6 +41,8 @@ export const userLogout = createAsyncThunk("user/logout", async (_, thunkAPI) =>
       if (err.response) {
         return thunkAPI.rejectWithValue({ status: err.response.status, data: err.response.data });
       }
+    } else {
+      throw error;
     }
   }
 });
@@ -53,7 +57,8 @@ export const userRegister = createAsyncThunk("user/register", async (data: UserD
       if (err.response) {
         return thunkAPI.rejectWithValue({ status: err.response.status, data: err.response.data });
       }
+    } else {
+      throw error;
     }
-    return error;
   }
 });
