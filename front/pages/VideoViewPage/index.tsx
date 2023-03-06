@@ -11,8 +11,7 @@ import { StyledButton } from '../../components/playList/styles';
 import { VideoViewFlexWrapper, LeftWrapper, VideoViewOperationDivWrapper, EditorDivWrapper } from './styles';
 import { useAppDispatch } from '../../store/configureStore';
 import { RootState } from '../../reducers';
-import { addBookmark, loadVideoInfoData, updateTextNoteLastViewTime, Video } from '../../actions/note';
-import { videoViewQueryString } from '../../components/videoList';
+import { addBookmark, loadVideoInfoData, PlayListInVideo, updateTextNoteLastViewTime, Video } from '../../actions/note';
 import VideoViewContinueConfirmDialog from '../../components/videoViewContinueConfirmDialog';
 
 export const changeTimeStringToSeconds = (timeString: string) => {
@@ -36,7 +35,7 @@ const VideoView = () => {
   const [VideoHandler, setVideoHandler] = useState<YouTubePlayer>();
   const [TextNote, setTextNote] = useState<string>('');
   const videoViewContinueConfirmDialogRef = useRef<HTMLDialogElement>(null);
-  const queryString = useRef<videoViewQueryString>(location.state);
+  const queryString = useRef<PlayListInVideo>(location.state);
   const YoutubeTag = useRef<HTMLDivElement>(null);
   const opts: YouTubeProps['opts'] = useRef({
     playerVars: {
@@ -52,18 +51,27 @@ const VideoView = () => {
   } = useSpeechRecognition();
 
   useEffect(() => {
-    // 화면 들어올 때 재생 위치 저장한 것이 있는지 확인하여 있다면 해당 위치부터 시작할지 묻기
     dispatch(loadVideoInfoData(queryString.current)).unwrap()
-      .then((result) => {
+      .then(result => {
+        if (result?.videoURL) {
+          setVideoId(result.videoURL);
+        }
         if (result?.textNote) {
           setTextNote(result.textNote);
         }
-        if (result?.lastViewTime && result.lastViewTime !== 0) {
+        if (result?.lastViewTime) {
           setContinueTime(result.lastViewTime);
-          videoViewContinueConfirmDialogRef.current?.showModal();
         }
-      });
-  }, [videoViewContinueConfirmDialogRef]);
+      })
+  }, [])
+
+  useEffect(() => {
+    if (ContinueTime && VideoHandler?.h) {
+      if (ContinueTime && ContinueTime !== 0) {
+        videoViewContinueConfirmDialogRef.current?.showModal();
+      }
+    }
+  }, [videoViewContinueConfirmDialogRef, ContinueTime, VideoHandler]);
 
   useEffect(() => {
     return () => {
@@ -74,7 +82,6 @@ const VideoView = () => {
       }
     }
   }, [TextNote, VideoHandler]);
-
 
   useEffect(() => {
     resetTranscript();
@@ -97,9 +104,8 @@ const VideoView = () => {
   }, [TextNote, VideoHandler]);
 
   const onReadyPlayer: YouTubeProps['onReady'] = useCallback((e: YouTubeEvent<any>) => {
-    setVideoId('WX0vcKxhHV0');
     setVideoHandler(e.target);
-  }, [VideoId]);
+  }, []);
 
   const onClickAddBookmark = useCallback(() => {
     const data = {
@@ -134,6 +140,10 @@ const VideoView = () => {
   const clickBookmark = useCallback((time: number) => {
     VideoHandler.seekTo(time);
   }, [VideoHandler]);
+
+  if (!VideoId) {
+    return <div>로딩중..</div>
+  }
 
   return (
     <>

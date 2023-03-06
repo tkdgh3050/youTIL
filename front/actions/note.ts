@@ -1,52 +1,9 @@
 import axios, { AxiosError } from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import shortId from "shortid";
 import { backUrl } from "../config/config";
 
 axios.defaults.baseURL = backUrl;
 axios.defaults.withCredentials = true;
-
-const exNote = [
-  {
-    id: shortId.generate(),
-    playListName: "목록1",
-    videoList: [
-      {
-        id: shortId.generate(),
-        videoName: "동영상1",
-        videoURL: "https://youtube.com/123",
-        videoLength: 6000,
-        bookmarkList: ["00:03:12", "00:04:13"],
-        textNote: "adasdasdasdsad",
-        lastViewTime: 0,
-      },
-      {
-        id: shortId.generate(),
-        videoName: "동영상2323232323",
-        videoURL: "https://youtube.com/1234",
-        videoLength: 8000,
-        bookmarkList: ["00:03:12", "00:04:13", "00:12:13"],
-        textNote: "adasdasdasdsad",
-        lastViewTime: 23,
-      },
-    ],
-  },
-  {
-    id: shortId.generate(),
-    playListName: "목록222222222222222222222222222222222222222",
-    videoList: [
-      {
-        id: shortId.generate(),
-        videoName: "동영상222222222222222222",
-        videoURL: "https://youtube.com/1234567",
-        videoLength: 10000,
-        bookmarkList: ["00:03:12", "00:04:13"],
-        textNote: "qqq",
-        lastViewTime: 1000,
-      },
-    ],
-  },
-];
 
 export interface PlayList {
   id: number;
@@ -175,14 +132,7 @@ export const loadVideoInfoData = createAsyncThunk("note/loadVideoInfoData", asyn
 
 export const addBookmark = createAsyncThunk("note/addBookmark", async (data: { playListInVideo: PlayListInVideo; time: string }, thunkAPI) => {
   try {
-    const response = {
-      data: {
-        id: shortId.generate(),
-        time: data.time,
-        playListId: data.playListInVideo.playListId,
-        videoId: data.playListInVideo.videoId,
-      },
-    };
+    const response = await axios.post("note/bookmark", data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -199,9 +149,7 @@ export const addBookmark = createAsyncThunk("note/addBookmark", async (data: { p
 export const deleteBookmark = createAsyncThunk("note/deleteBookmark", async (data: number, thunkAPI) => {
   try {
     // 해당하는 북마크 인덱스 삭제
-    const response = {
-      data,
-    };
+    const response = await axios.delete(`note/bookmark/${data}`);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -219,12 +167,7 @@ export const updateTextNoteLastViewTime = createAsyncThunk(
   "note/updateTextNoteLastViewTime",
   async (data: { playListInVideo: PlayListInVideo; textNote: string; lastViewTime: number }, thunkAPI) => {
     try {
-      const response = {
-        data: {
-          textNote: data.textNote,
-          lastViewTime: data.lastViewTime,
-        },
-      };
+      const response = await axios.patch(`note/videoInfo/textNoteLastViewTime`, data);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {

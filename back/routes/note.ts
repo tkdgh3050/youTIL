@@ -1,13 +1,16 @@
 import express, { Request, Response, NextFunction } from "express";
 import {
+  deleteBookmark,
   deletePlayList,
   deleteVideo,
+  insertBookmark,
   insertPlayList,
   insertVideo,
   selectBookmarkAll,
   selectPlayListAll,
   selectVideoAllByPlayListId,
   selectVideoInfo,
+  updateVideoInfoTextNoteLastViewTime,
 } from "../database/NoteQuery";
 import { ResultSetHeader } from "mysql2";
 
@@ -119,6 +122,7 @@ router.get("/videoInfo/:playListId/:videoId", isLoggedInCheck, async (req: Reque
       videoURL: videoRow[0].videoURL,
       lastViewTime: videoRow[0].lastViewTime,
       bookmarkList: bookmarkRows,
+      textNote: videoRow[0].textNote,
     };
     return res.status(200).json(data);
   } catch (error) {
@@ -127,4 +131,47 @@ router.get("/videoInfo/:playListId/:videoId", isLoggedInCheck, async (req: Reque
   }
 });
 
+router.post("/bookmark", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const [result] = await pool.query<ResultSetHeader>(insertBookmark, [
+      req.body.time,
+      req.body.playListInVideo.playListId,
+      req.body.playListInVideo.videoId,
+    ]);
+    const data: Bookmark = {
+      id: result.insertId,
+      time: req.body.time,
+      playListId: req.body.playListInVideo.playListId,
+      videoId: req.body.playListInVideo.videoId,
+    };
+    return res.status(201).json(data);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.delete("/bookmark/:bookmarkId", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const [result] = await pool.query<ResultSetHeader>(deleteBookmark, [req.params.bookmarkId]);
+    return res.status(201).send(req.params.bookmarkId);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.patch("/videoInfo/textNoteLastViewTime", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const [result] = await pool.query<ResultSetHeader>(updateVideoInfoTextNoteLastViewTime, [
+      req.body.textNote,
+      req.body.lastViewTime,
+      req.body.playListInVideo.videoId,
+    ]);
+    return res.status(201).send("ok");
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
 export default router;

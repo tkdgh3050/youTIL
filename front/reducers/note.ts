@@ -227,10 +227,10 @@ const noteSlice = createSlice({
       state.updateTextNoteLastViewTimeError = null;
     },
     [updateTextNoteLastViewTime.fulfilled.type]: (state, action: PayloadAction<{ textNote: string; lastViewTime: number }>) => {
-      if (state.videoInfo) {
-        state.videoInfo.lastViewTime = action.payload.lastViewTime;
-        state.videoInfo.textNote = action.payload.textNote;
-      }
+      // if (state.videoInfo) {
+      //   state.videoInfo.lastViewTime = action.payload.lastViewTime;
+      //   state.videoInfo.textNote = action.payload.textNote;
+      // }
       state.updateTextNoteLastViewTimeLoading = false;
       state.updateTextNoteLastViewTimeDone = true;
     },
