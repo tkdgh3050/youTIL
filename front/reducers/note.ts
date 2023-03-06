@@ -107,7 +107,11 @@ const noteSlice = createSlice({
     [addPlayList.fulfilled.type]: (state, action: PayloadAction<PlayList>) => {
       state.addPlayListLoading = false;
       state.addPlayListDone = true;
-      state.playList?.unshift(action.payload);
+      if (state.playList?.length) {
+        state.playList.unshift(action.payload);
+      } else {
+        state.playList = [action.payload];
+      }
     },
     [addPlayList.rejected.type]: (state, action: PayloadAction<Error>) => {
       state.addPlayListLoading = false;
@@ -120,7 +124,13 @@ const noteSlice = createSlice({
     },
     [addVideoList.fulfilled.type]: (state, action: PayloadAction<Video>) => {
       const playList = state.playList?.find(v => v.id === action.payload.playListId);
-      playList?.videoList?.unshift(action.payload);
+      if (playList) {
+        if (playList.videoList?.length) {
+          playList.videoList?.unshift(action.payload);
+        } else {
+          playList.videoList = [action.payload];
+        }
+      }
       state.addVideoListLoading = false;
       state.addVideoListDone = true;
     },
@@ -133,7 +143,7 @@ const noteSlice = createSlice({
       state.deletePlayListDone = false;
       state.deletePlayListError = null;
     },
-    [deletePlayList.fulfilled.type]: (state, action: PayloadAction<string>) => {
+    [deletePlayList.fulfilled.type]: (state, action: PayloadAction<number>) => {
       if (state.playList) {
         const newPlayList = state.playList.filter(v => v.id !== action.payload);
         state.playList = newPlayList;
@@ -200,7 +210,7 @@ const noteSlice = createSlice({
       state.deleteBookmarkDone = false;
       state.deleteBookmarkError = null;
     },
-    [deleteBookmark.fulfilled.type]: (state, action: PayloadAction<string>) => {
+    [deleteBookmark.fulfilled.type]: (state, action: PayloadAction<number>) => {
       if (state.videoInfo?.bookmarkList) {
         state.videoInfo.bookmarkList = state.videoInfo.bookmarkList.filter(v => v.id !== action.payload);
       }

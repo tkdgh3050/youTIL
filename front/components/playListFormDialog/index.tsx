@@ -23,7 +23,7 @@ const PlayListFormDialog: FunctionComponent<{ addPlayListDialogRef: React.RefObj
       return;
     }
     console.log(PlayListName);
-    dispatch(addPlayList({ id: '1', playListName: PlayListName }));
+    dispatch(addPlayList({ id: -1, playListName: PlayListName }));
     addPlayListDialogRef.current?.close();
   }, [PlayListName, addPlayListDialogRef]);
 

@@ -1,25 +1,20 @@
 import React, { FunctionComponent, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom';
 
-import { Video } from '../../actions/note';
+import { PlayListInVideo, Video } from '../../actions/note';
 import { VideoControlDivWrapper, OverflowSpan, StyledButton } from './styles'
 
 type propType = {
   data: Video,
-  clickDeleteVideo(id: string, name: string): void,
-  playListId: string,
+  clickDeleteVideo(id: number[], name: string): void,
+  playListId: number,
 };
 
-export interface videoViewQueryString {
-  playListId: string;
-  videoId: string;
-}
-
 const VideoList: FunctionComponent<propType> = ({ data, clickDeleteVideo, playListId }) => {
-  const queryString = useRef<videoViewQueryString>({ playListId: playListId, videoId: data.id });
+  const queryString = useRef<PlayListInVideo>({ playListId: playListId, videoId: data.id });
 
   const onClickDeleteVideo = useCallback(() => {
-    clickDeleteVideo(data.id + ' ' + playListId, data.videoName);
+    clickDeleteVideo([data.id, playListId], data.videoName);
   }, []); //'/videoView?playListId=' + playListId + '&videoId=' + data.id
 
   return (

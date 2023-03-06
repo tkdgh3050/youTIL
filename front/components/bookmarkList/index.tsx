@@ -21,7 +21,7 @@ const BookmarkList: FunctionComponent<{ videoHandler: YouTubePlayer, bookmarks: 
     clickBookmark(time);
   }, [clickBookmark]);
 
-  const onClickDeleteBookmark = useCallback((id: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
+  const onClickDeleteBookmark = useCallback((id: number) => (e: React.MouseEvent<HTMLButtonElement>) => {
     dispatch(deleteBookmark(id));
   }, [videoHandler]);
 

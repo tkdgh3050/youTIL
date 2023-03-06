@@ -20,7 +20,7 @@ const MyNote = () => {
   const addPlayListDialogRef = useRef<HTMLDialogElement>(null);
   const addVideoListDialogRef = useRef<HTMLDialogElement>(null);
   const deleteConfirmDialogRef = useRef<HTMLDialogElement>(null);
-  const [ParamId, setParamId] = useState('');
+  const [ParamId, setParamId] = useState<number[]>([]);
   const [DeleteFlag, setDeleteFlag] = useState<deleteFlag>('');
   const [DeleteName, setDeleteName] = useState('');
 
@@ -41,14 +41,14 @@ const MyNote = () => {
     }
   }, [addPlayListDialogRef]);
 
-  const clickAddVideoList = useCallback((id: string) => {
+  const clickAddVideoList = useCallback((id: number[]) => {
     if (addVideoListDialogRef.current) {
       setParamId(id);
       addVideoListDialogRef.current.showModal();
     }
   }, [addVideoListDialogRef]);
 
-  const clickDeletePlayList = useCallback((id: string, name: string) => {
+  const clickDeletePlayList = useCallback((id: number[], name: string) => {
     if (deleteConfirmDialogRef.current) {
       setDeleteFlag('playList');
       setDeleteName(name);
@@ -57,7 +57,7 @@ const MyNote = () => {
     }
   }, [deleteConfirmDialogRef]);
 
-  const clickDeleteVideo = useCallback((id: string, name: string) => {
+  const clickDeleteVideo = useCallback((id: number[], name: string) => {
     if (deleteConfirmDialogRef.current) {
       setDeleteFlag('video');
       setDeleteName(name);

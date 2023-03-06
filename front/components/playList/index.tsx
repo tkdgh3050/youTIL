@@ -9,9 +9,9 @@ import {
 
 type propType = {
   data: PlayList,
-  clickAddVideoList(id: string): void,
-  clickDeletePlayList(id: string, name: string): void,
-  clickDeleteVideo(id: string, name: string): void,
+  clickAddVideoList(id: number[]): void,
+  clickDeletePlayList(id: number[], name: string): void,
+  clickDeleteVideo(id: number[], name: string): void,
 };
 const PlayList: FunctionComponent<propType> = ({ data, clickAddVideoList, clickDeletePlayList, clickDeleteVideo }) => {
 
@@ -21,11 +21,11 @@ const PlayList: FunctionComponent<propType> = ({ data, clickAddVideoList, clickD
   }
 
   const onClickAddVideoListButton = useCallback(() => {
-    clickAddVideoList(data.id);
+    clickAddVideoList([data.id]);
   }, [data]);
 
   const onClickDeleteListButton = useCallback(() => {
-    clickDeletePlayList(data.id, data.playListName);
+    clickDeletePlayList([data.id], data.playListName);
   }, [data]);
 
   return (
