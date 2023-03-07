@@ -11,7 +11,7 @@ import { StyledButton } from '../../components/playList/styles';
 import { VideoViewFlexWrapper, LeftWrapper, VideoViewOperationDivWrapper, EditorDivWrapper } from './styles';
 import { useAppDispatch } from '../../store/configureStore';
 import { RootState } from '../../reducers';
-import { addBookmark, loadVideoInfoData, PlayListInVideo, updateTextNoteLastViewTime, Video } from '../../actions/note';
+import { addBookmark, loadVideoInfoData, PlayListInVideo, updateIsPinned, updateTextNoteLastViewTime, Video } from '../../actions/note';
 import VideoViewContinueConfirmDialog from '../../components/videoViewContinueConfirmDialog';
 import { UserState } from '../../reducers/user';
 
@@ -147,6 +147,14 @@ const VideoView = () => {
     SpeechRecognition.stopListening();
   }, []);
 
+  const onClickPin = useCallback(() => {
+    const data = {
+      isPinned: videoInfo?.isPinned === 1 ? 0 : 1,
+      playListInVideo: queryString.current,
+    }
+    dispatch(updateIsPinned(data)).unwrap();
+  }, [videoInfo?.isPinned]);
+
   const clickBookmark = useCallback((time: number) => {
     VideoHandler.seekTo(time);
   }, [VideoHandler]);
@@ -174,6 +182,12 @@ const VideoView = () => {
             }
             <StyledButton className='normal' onClick={onClickBefore}>&nbsp;- 10초</StyledButton>
             <StyledButton className='normal' onClick={onClickAfter}>&nbsp;+ 10초</StyledButton>
+            {
+              videoInfo?.isPinned
+                ? <span onClick={onClickPin}><i className="fa-solid fa-star"></i></span>
+                : <span onClick={onClickPin}><i className="fa-regular fa-star"></i></span>
+            }
+
           </VideoViewOperationDivWrapper>
           {/* bookmarks */}
           <BookmarkList videoHandler={VideoHandler} bookmarks={videoInfo?.bookmarkList} clickBookmark={clickBookmark} />

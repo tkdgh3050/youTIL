@@ -14,6 +14,7 @@ import {
   deleteBookmark,
   updateTextNoteLastViewTime,
   Bookmark,
+  updateIsPinned,
 } from "../actions/note";
 
 export interface NoteState {
@@ -46,6 +47,9 @@ export interface NoteState {
   updateTextNoteLastViewTimeLoading: boolean; // 텍스트노트, 지금까지 본 시간 수정
   updateTextNoteLastViewTimeDone: boolean;
   updateTextNoteLastViewTimeError: Error | null;
+  updateIsPinnedLoading: boolean; // 동영상을 핀 했는지 안했는지 여부 수정
+  updateIsPinnedDone: boolean;
+  updateIsPinnedError: Error | null;
 }
 
 const initialState: NoteState = {
@@ -78,6 +82,9 @@ const initialState: NoteState = {
   updateTextNoteLastViewTimeLoading: false, // 텍스트노트, 지금까지 본 시간 수정
   updateTextNoteLastViewTimeDone: false,
   updateTextNoteLastViewTimeError: null,
+  updateIsPinnedLoading: false, // 동영상을 핀 했는지 안했는지 여부 수정
+  updateIsPinnedDone: false,
+  updateIsPinnedError: null,
 };
 
 const noteSlice = createSlice({
@@ -237,6 +244,22 @@ const noteSlice = createSlice({
     [updateTextNoteLastViewTime.rejected.type]: (state, action: PayloadAction<Error>) => {
       state.updateTextNoteLastViewTimeLoading = false;
       state.updateTextNoteLastViewTimeError = action.payload;
+    },
+    [updateIsPinned.pending.type]: state => {
+      state.updateIsPinnedLoading = true;
+      state.updateIsPinnedDone = false;
+      state.updateIsPinnedError = null;
+    },
+    [updateIsPinned.fulfilled.type]: (state, action: PayloadAction<number>) => {
+      if (state.videoInfo) {
+        state.videoInfo.isPinned = action.payload;
+      }
+      state.updateIsPinnedLoading = false;
+      state.updateIsPinnedDone = true;
+    },
+    [updateIsPinned.rejected.type]: (state, action: PayloadAction<Error>) => {
+      state.updateIsPinnedLoading = false;
+      state.updateIsPinnedError = action.payload;
     },
   },
 });

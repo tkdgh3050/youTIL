@@ -13,6 +13,7 @@ export interface Video {
   textNote?: string;
   lastViewTime: number;
   playListId?: number;
+  isPinned?: number;
 }
 
 export interface PlayListInVideo {

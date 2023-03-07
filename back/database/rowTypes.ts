@@ -21,6 +21,11 @@ export interface video extends RowDataPacket {
   textNote: string;
   lastViewTime: number;
   playListID: number;
+  userID: number;
+  isPinned: number;
+  created_at: object;
+  modified_lastViewTime_at: object;
+  modified_isPinned_at: object;
 }
 
 export interface bookmark extends RowDataPacket {

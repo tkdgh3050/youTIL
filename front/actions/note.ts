@@ -20,6 +20,7 @@ export interface Video {
   textNote?: string;
   lastViewTime: number;
   playListId?: number;
+  isPinned?: number;
 }
 
 export interface PlayListInVideo {
@@ -168,6 +169,25 @@ export const updateTextNoteLastViewTime = createAsyncThunk(
   async (data: { playListInVideo: PlayListInVideo; textNote: string; lastViewTime: number }, thunkAPI) => {
     try {
       const response = await axios.patch(`note/videoInfo/textNoteLastViewTime`, data);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const err = error as AxiosError;
+        if (err.response) {
+          return thunkAPI.rejectWithValue({ status: err.response.status, data: err.response.data });
+        }
+      } else {
+        throw error;
+      }
+    }
+  }
+);
+
+export const updateIsPinned = createAsyncThunk(
+  "note/updateIsPinned",
+  async (data: { playListInVideo: PlayListInVideo; isPinned: number }, thunkAPI) => {
+    try {
+      const response = await axios.patch(`note/videoInfo/isPinned`, data);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {

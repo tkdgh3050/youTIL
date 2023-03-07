@@ -10,6 +10,7 @@ import {
   selectPlayListAll,
   selectVideoAllByPlayListId,
   selectVideoInfo,
+  updateIsPinned,
   updateVideoInfoTextNoteLastViewTime,
 } from "../database/NoteQuery";
 import { ResultSetHeader } from "mysql2";
@@ -33,7 +34,7 @@ router.get("/", isLoggedInCheck, async (req: Request, res: Response, next: NextF
           data.push({
             id: playListRow.id,
             playListName: playListRow.playlistName,
-            videoList: videoRows, //Array.from(videoRows),
+            videoList: videoRows,
           });
         } else {
           //video가 존재하지 않는 경우
@@ -82,6 +83,7 @@ router.post("/videoList", isLoggedInCheck, async (req: Request, res: Response, n
       req.body.videoURL,
       req.body.lastViewTime,
       req.body.playListId,
+      req.user?.id,
     ]);
     const data: Video = {
       id: result.insertId,
@@ -123,6 +125,7 @@ router.get("/videoInfo/:playListId/:videoId", isLoggedInCheck, async (req: Reque
       lastViewTime: videoRow[0].lastViewTime,
       bookmarkList: bookmarkRows,
       textNote: videoRow[0].textNote,
+      isPinned: videoRow[0].isPinned,
     };
     return res.status(200).json(data);
   } catch (error) {
@@ -174,4 +177,15 @@ router.patch("/videoInfo/textNoteLastViewTime", isLoggedInCheck, async (req: Req
     next(error);
   }
 });
+
+router.patch("/videoInfo/isPinned", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const [result] = await pool.query<ResultSetHeader>(updateIsPinned, [req.body.isPinned, req.body.playListInVideo.videoId]);
+    return res.status(201).json(req.body.isPinned);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 export default router;
