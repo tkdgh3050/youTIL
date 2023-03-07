@@ -7,7 +7,10 @@ import {
   insertPlayList,
   insertVideo,
   selectBookmarkAll,
+  selectLastViewVideo,
+  selectPinnedVideo,
   selectPlayListAll,
+  selectRecentAddVideo,
   selectVideoAllByPlayListId,
   selectVideoInfo,
   updateIsPinned,
@@ -182,6 +185,71 @@ router.patch("/videoInfo/isPinned", isLoggedInCheck, async (req: Request, res: R
   try {
     const [result] = await pool.query<ResultSetHeader>(updateIsPinned, [req.body.isPinned, req.body.playListInVideo.videoId]);
     return res.status(201).json(req.body.isPinned);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get("/loadLastViewVideoList", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data: Video[] = [];
+    const [videoRows] = await pool.query<video[]>(selectLastViewVideo, [req.user?.id]);
+    videoRows.forEach(videoRow => {
+      const video: Video = {
+        id: videoRow.id,
+        videoName: videoRow.videoName,
+        videoURL: videoRow.videoURL,
+        lastViewTime: videoRow.lastViewTime,
+        playListId: videoRow.playListID,
+      };
+      data.push(video);
+    });
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get("/loadRecentAddVideoList", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data: Video[] = [];
+    const [videoRows] = await pool.query<video[]>(selectRecentAddVideo, [req.user?.id]);
+    videoRows.forEach(videoRow => {
+      const video: Video = {
+        id: videoRow.id,
+        videoName: videoRow.videoName,
+        videoURL: videoRow.videoURL,
+        lastViewTime: videoRow.lastViewTime,
+        created_at: videoRow.created_at,
+        playListId: videoRow.playListID,
+      };
+      data.push(video);
+    });
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get("/loadPinnedVideoList", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data: Video[] = [];
+    const [videoRows] = await pool.query<video[]>(selectPinnedVideo, [req.user?.id]);
+    videoRows.forEach(videoRow => {
+      const video: Video = {
+        id: videoRow.id,
+        videoName: videoRow.videoName,
+        videoURL: videoRow.videoURL,
+        lastViewTime: videoRow.lastViewTime,
+        modified_isPinned_at: videoRow.modified_isPinned_at,
+        playListId: videoRow.playListID,
+      };
+      data.push(video);
+    });
+    return res.status(200).json(data);
   } catch (error) {
     console.error(error);
     next(error);

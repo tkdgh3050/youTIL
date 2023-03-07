@@ -10,4 +10,5 @@ export const dbConfig: mysql.PoolOptions = {
   port: DB_PORT ? parseInt(DB_PORT) : 3306,
   database: DB_DATABASE,
   connectionLimit: 10,
+  dateStrings: ["DATE"],
 };

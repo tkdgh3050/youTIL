@@ -21,6 +21,9 @@ export interface Video {
   lastViewTime: number;
   playListId?: number;
   isPinned?: number;
+  created_at?: string;
+  modified_lastViewTime_at?: string;
+  modified_isPinned_at?: string;
 }
 
 export interface PlayListInVideo {
@@ -201,3 +204,51 @@ export const updateIsPinned = createAsyncThunk(
     }
   }
 );
+
+export const loadLastViewVideoList = createAsyncThunk("note/loadLastViewVideoList", async (data, thunkAPI) => {
+  try {
+    const response = await axios.get(`note/loadLastViewVideoList`);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const err = error as AxiosError;
+      if (err.response) {
+        return thunkAPI.rejectWithValue({ status: err.response.status, data: err.response.data });
+      }
+    } else {
+      throw error;
+    }
+  }
+});
+
+export const loadRecentAddVideoList = createAsyncThunk("note/loadRecentAddVideoList", async (data, thunkAPI) => {
+  try {
+    const response = await axios.get(`note/loadRecentAddVideoList`);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const err = error as AxiosError;
+      if (err.response) {
+        return thunkAPI.rejectWithValue({ status: err.response.status, data: err.response.data });
+      }
+    } else {
+      throw error;
+    }
+  }
+});
+
+export const loadPinnedVideoList = createAsyncThunk("note/loadPinnedVideoList", async (data, thunkAPI) => {
+  try {
+    const response = await axios.get(`note/loadPinnedVideoList`);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const err = error as AxiosError;
+      if (err.response) {
+        return thunkAPI.rejectWithValue({ status: err.response.status, data: err.response.data });
+      }
+    } else {
+      throw error;
+    }
+  }
+});

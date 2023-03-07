@@ -15,11 +15,17 @@ import {
   updateTextNoteLastViewTime,
   Bookmark,
   updateIsPinned,
+  loadLastViewVideoList,
+  loadRecentAddVideoList,
+  loadPinnedVideoList,
 } from "../actions/note";
 
 export interface NoteState {
-  playList: PlayList[] | null; //내 노트정보
-  videoInfo: Video | null;
+  playList: PlayList[] | null; // 내 노트정보
+  videoInfo: Video | null; // 동영상 재생 시 정보
+  lastViewVideoList: Video[] | null; // 메인 - 시청 중 동영상
+  recentAddVideoList: Video[] | null; // 메인 - 최근 추가 동영상
+  pinnedVideoList: Video[] | null; // 메인 - 즐겨찾기 동영상
   lodePlayListLoading: boolean; // 내 노트정보 불러오기
   lodePlayListDone: boolean;
   lodePlayListError: Error | null;
@@ -50,11 +56,23 @@ export interface NoteState {
   updateIsPinnedLoading: boolean; // 동영상을 핀 했는지 안했는지 여부 수정
   updateIsPinnedDone: boolean;
   updateIsPinnedError: Error | null;
+  loadLastViewVideoListLoading: boolean; // 메인 - 시청 중 동영상
+  loadLastViewVideoListDone: boolean;
+  loadLastViewVideoListError: Error | null;
+  loadRecentAddVideoListLoading: boolean; // /메인 - 최근 추가 동영상
+  loadRecentAddVideoListDone: boolean;
+  loadRecentAddVideoListError: Error | null;
+  loadPinnedVideoListLoading: boolean; // 메인 - 즐겨찾기 동영상
+  loadPinnedVideoListDone: boolean;
+  loadPinnedVideoListError: Error | null;
 }
 
 const initialState: NoteState = {
   playList: null, //내 노트정보
   videoInfo: null, //비디오 정보
+  lastViewVideoList: null, //메인 - 시청 중 동영상
+  recentAddVideoList: null, //메인 - 최근 추가 동영상
+  pinnedVideoList: null, //메인 - 즐겨찾기 동영상
   lodePlayListLoading: false, // 내 노트정보 불러오기
   lodePlayListDone: false,
   lodePlayListError: null,
@@ -85,6 +103,15 @@ const initialState: NoteState = {
   updateIsPinnedLoading: false, // 동영상을 핀 했는지 안했는지 여부 수정
   updateIsPinnedDone: false,
   updateIsPinnedError: null,
+  loadLastViewVideoListLoading: false, // 메인 - 시청 중 동영상
+  loadLastViewVideoListDone: false,
+  loadLastViewVideoListError: null,
+  loadRecentAddVideoListLoading: false, // /메인 - 최근 추가 동영상
+  loadRecentAddVideoListDone: false,
+  loadRecentAddVideoListError: null,
+  loadPinnedVideoListLoading: false, // 메인 - 즐겨찾기 동영상
+  loadPinnedVideoListDone: false,
+  loadPinnedVideoListError: null,
 };
 
 const noteSlice = createSlice({
@@ -234,10 +261,6 @@ const noteSlice = createSlice({
       state.updateTextNoteLastViewTimeError = null;
     },
     [updateTextNoteLastViewTime.fulfilled.type]: (state, action: PayloadAction<{ textNote: string; lastViewTime: number }>) => {
-      // if (state.videoInfo) {
-      //   state.videoInfo.lastViewTime = action.payload.lastViewTime;
-      //   state.videoInfo.textNote = action.payload.textNote;
-      // }
       state.updateTextNoteLastViewTimeLoading = false;
       state.updateTextNoteLastViewTimeDone = true;
     },
@@ -260,6 +283,48 @@ const noteSlice = createSlice({
     [updateIsPinned.rejected.type]: (state, action: PayloadAction<Error>) => {
       state.updateIsPinnedLoading = false;
       state.updateIsPinnedError = action.payload;
+    },
+    [loadLastViewVideoList.pending.type]: state => {
+      state.loadLastViewVideoListLoading = true;
+      state.loadLastViewVideoListDone = false;
+      state.loadLastViewVideoListError = null;
+    },
+    [loadLastViewVideoList.fulfilled.type]: (state, action: PayloadAction<Video[]>) => {
+      state.lastViewVideoList = action.payload;
+      state.loadLastViewVideoListLoading = false;
+      state.loadLastViewVideoListDone = true;
+    },
+    [loadLastViewVideoList.rejected.type]: (state, action: PayloadAction<Error>) => {
+      state.loadLastViewVideoListLoading = false;
+      state.loadLastViewVideoListError = action.payload;
+    },
+    [loadRecentAddVideoList.pending.type]: state => {
+      state.loadRecentAddVideoListLoading = true;
+      state.loadRecentAddVideoListDone = false;
+      state.loadRecentAddVideoListError = null;
+    },
+    [loadRecentAddVideoList.fulfilled.type]: (state, action: PayloadAction<Video[]>) => {
+      state.recentAddVideoList = action.payload;
+      state.loadRecentAddVideoListLoading = false;
+      state.loadRecentAddVideoListDone = true;
+    },
+    [loadRecentAddVideoList.rejected.type]: (state, action: PayloadAction<Error>) => {
+      state.loadRecentAddVideoListLoading = false;
+      state.loadRecentAddVideoListError = action.payload;
+    },
+    [loadPinnedVideoList.pending.type]: state => {
+      state.loadPinnedVideoListLoading = true;
+      state.loadPinnedVideoListDone = false;
+      state.loadPinnedVideoListError = null;
+    },
+    [loadPinnedVideoList.fulfilled.type]: (state, action: PayloadAction<Video[]>) => {
+      state.pinnedVideoList = action.payload;
+      state.loadPinnedVideoListLoading = false;
+      state.loadPinnedVideoListDone = true;
+    },
+    [loadPinnedVideoList.rejected.type]: (state, action: PayloadAction<Error>) => {
+      state.loadPinnedVideoListLoading = false;
+      state.loadPinnedVideoListError = action.payload;
     },
   },
 });

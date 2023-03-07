@@ -14,6 +14,9 @@ export interface Video {
   lastViewTime: number;
   playListId?: number;
   isPinned?: number;
+  created_at?: string;
+  modified_lastViewTime_at?: string;
+  modified_isPinned_at?: string;
 }
 
 export interface PlayListInVideo {

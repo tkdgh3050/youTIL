@@ -5,7 +5,7 @@ export interface user extends RowDataPacket {
   email: string;
   password: string;
   isAdmin: 0 | 1;
-  created_at: object;
+  created_at: string;
 }
 
 export interface playList extends RowDataPacket {
@@ -23,9 +23,9 @@ export interface video extends RowDataPacket {
   playListID: number;
   userID: number;
   isPinned: number;
-  created_at: object;
-  modified_lastViewTime_at: object;
-  modified_isPinned_at: object;
+  created_at: string;
+  modified_lastViewTime_at: string;
+  modified_isPinned_at: string;
 }
 
 export interface bookmark extends RowDataPacket {
