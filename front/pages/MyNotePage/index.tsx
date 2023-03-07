@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { lodePlayList } from '../../actions/note';
+import { useNavigate } from 'react-router';
 
 import Title from '../../components/title';
 import PlayList from '../../components/playList';
@@ -13,9 +14,12 @@ import {
 import PlayListFormDialog from '../../components/playListFormDialog';
 import VideoListFormDialog from '../../components/videoListFormDialog';
 import DeleteConfirmDialog, { deleteFlag } from '../../components/deleteConfirmDialog';
+import { UserState } from '../../reducers/user';
 
 const MyNote = () => {
   const note = useSelector<RootState, NoteState>((state) => state.note);
+  const user = useSelector<RootState, UserState>((state) => state.user);
+  const navigator = useNavigate();
   const dispatch = useAppDispatch();
   const addPlayListDialogRef = useRef<HTMLDialogElement>(null);
   const addVideoListDialogRef = useRef<HTMLDialogElement>(null);
@@ -23,6 +27,14 @@ const MyNote = () => {
   const [ParamId, setParamId] = useState<number[]>([]);
   const [DeleteFlag, setDeleteFlag] = useState<deleteFlag>('');
   const [DeleteName, setDeleteName] = useState('');
+
+  useEffect(() => {
+    if (!user.userInfo) {
+      alert('로그인이 필요합니다.');
+      navigator('/login');
+    }
+  }, [user])
+
 
   useEffect(() => {
     const req = dispatch(lodePlayList());
@@ -65,6 +77,10 @@ const MyNote = () => {
       deleteConfirmDialogRef.current.showModal();
     }
   }, [deleteConfirmDialogRef]);
+
+  if (!user.userInfo) {
+    return <></>;
+  }
 
   return (
     <>

@@ -25,6 +25,7 @@ const RegisterPage: FunctionComponent = () => {
 
   useEffect(() => {
     if (user.userInfo) {
+      alert('잘못된 접근입니다.');
       navigator('/');
     }
   }, [user, user.userInfo]);

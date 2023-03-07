@@ -28,7 +28,7 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
 });
 
 // 로그인
-router.post("/login", isNotLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+router.post("/login", async (req: Request, res: Response, next: NextFunction) => {
   //POST user/login
   try {
     passport.authenticate("local", (err: any, user: Express.User, info: { message: any }) => {

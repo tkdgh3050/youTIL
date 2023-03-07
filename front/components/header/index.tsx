@@ -19,6 +19,10 @@ const Header: FunctionComponent = () => {
     document.title = 'YouTIL'
   }, [])
 
+  useEffect(() => {
+    // if (!user.userInfo && )
+  }, [user]);
+
   const openSidebar = useCallback(() => {
     setIsSidebarOpen(true);
     if (sidebarRef.current) {

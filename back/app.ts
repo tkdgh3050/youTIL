@@ -33,6 +33,7 @@ app.use(
     saveUninitialized: false,
     resave: false,
     secret: process.env.SECRET_COOKIE_KEY!,
+    name: process.env.SESSION_NAME,
   })
 );
 app.use(passport.initialize());

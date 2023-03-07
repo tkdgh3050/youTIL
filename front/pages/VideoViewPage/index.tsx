@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import YouTube, { YouTubeEvent, YouTubeProps, YouTubePlayer } from 'react-youtube';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { useSelector } from 'react-redux';
@@ -13,6 +13,7 @@ import { useAppDispatch } from '../../store/configureStore';
 import { RootState } from '../../reducers';
 import { addBookmark, loadVideoInfoData, PlayListInVideo, updateTextNoteLastViewTime, Video } from '../../actions/note';
 import VideoViewContinueConfirmDialog from '../../components/videoViewContinueConfirmDialog';
+import { UserState } from '../../reducers/user';
 
 export const changeTimeStringToSeconds = (timeString: string) => {
   const [hours, minutes, seconds] = timeString.split(':');
@@ -28,6 +29,8 @@ export const changeSecondsToTimeString = (seconds: number) => {
 
 const VideoView = () => {
   const videoInfo = useSelector<RootState, Video | null>((state) => state.note.videoInfo);
+  const user = useSelector<RootState, UserState>((state) => state.user);
+  const navigator = useNavigate();
   const dispatch = useAppDispatch();
   const location = useLocation();
   const [VideoId, setVideoId] = useState('');
@@ -49,6 +52,13 @@ const VideoView = () => {
     resetTranscript,
     browserSupportsSpeechRecognition
   } = useSpeechRecognition();
+
+  useEffect(() => {
+    if (!user.userInfo) {
+      alert('로그인이 필요합니다.');
+      navigator('/login');
+    }
+  }, [user]);
 
   useEffect(() => {
     dispatch(loadVideoInfoData(queryString.current)).unwrap()

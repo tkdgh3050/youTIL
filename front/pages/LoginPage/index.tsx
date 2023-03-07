@@ -22,7 +22,7 @@ const LoginPage: FunctionComponent = () => {
     if (user.userInfo) {
       navigator('/');
     }
-  }, [user, user.userInfo]);
+  }, [user]);
 
   const onChangeEmail = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -39,6 +39,7 @@ const LoginPage: FunctionComponent = () => {
     dispatch(userLogin({ email: Email, password: Password })).unwrap()
       .then((result) => {
         alert(`${result.email} 님 환영합니다.`);
+        navigator('/');
       })
       .catch((error: { status: number, data: { type: string, message: string } }) => {
         if (error.status === 400) {

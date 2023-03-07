@@ -9,11 +9,7 @@ export const isLoggedInCheck = (req: Request, res: Response, next: NextFunction)
 };
 
 export const isNotLoggedInCheck = (req: Request, res: Response, next: NextFunction) => {
-  console.log("in isNotLoggedInCheck");
-
   if (!req.isAuthenticated()) {
-    console.log("out isNotLoggedInCheck");
-
     next();
   } else {
     res.status(401).send("로그인하지 않은 사용자만 접근 가능합니다.");
