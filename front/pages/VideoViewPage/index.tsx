@@ -99,10 +99,9 @@ const VideoView = () => {
 
   const saveNoteData = useCallback(() => {
     // 현재 상태 저장 로직
-    console.log(TextNote);
     let now = VideoHandler.getCurrentTime();
     const total = VideoHandler.getDuration();
-    if (total <= now) {
+    if (total - 10 <= now) { // 끝나기 10초 전까지 봤으면 다 본 것으로 처리
       now = 0;
     }
     const data = {
@@ -116,6 +115,12 @@ const VideoView = () => {
   const onReadyPlayer: YouTubeProps['onReady'] = useCallback((e: YouTubeEvent<any>) => {
     setVideoHandler(e.target);
   }, []);
+
+  const onStateChange = useCallback((event: YouTubeEvent<number>) => {
+    if (event.data === 1 || event.data === 2) { // 1은 동영상 재생, 2는 동영상 멈춤
+      saveNoteData();
+    }
+  }, [TextNote, VideoHandler])
 
   const onClickAddBookmark = useCallback(() => {
     const data = {
@@ -170,7 +175,7 @@ const VideoView = () => {
         {/* video */}
         <LeftWrapper>
           <div ref={YoutubeTag}>
-            <YouTube videoId={VideoId} onReady={onReadyPlayer} opts={opts} />
+            <YouTube videoId={VideoId} onReady={onReadyPlayer} opts={opts} onStateChange={onStateChange} />
           </div>
           {/* operation buttons */}
           <VideoViewOperationDivWrapper>
