@@ -32,7 +32,7 @@ const HowToSection = () => {
       </CustomDivider>
       <HowToDivWrapper>
         <LineDivWrapper><span>1. 원하는 영상을 찾아</span><div><img src={`${publicPath}HowTo_1.gif`}></img></div></LineDivWrapper>
-        <LineDivWrapper><span>2. 공유하기를 누르고</span><div><img src={`${publicPath}HowTo_2.gif`}></img></div></LineDivWrapper>
+        <LineDivWrapper><span>2. 공유링크를 복사하여</span><div><img src={`${publicPath}HowTo_2.gif`}></img></div></LineDivWrapper>
         <LineDivWrapper><span>3. 동영상 추가</span><div><img src={`${publicPath}HowTo_3.gif`}></img></div></LineDivWrapper>
       </HowToDivWrapper>
     </>
