@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(hpp());
   app.use(
     cors({
-      origin: true,
+      origin: ["http://youtil.store", "http://www.youtil.store"],
       credentials: true,
     })
   );
@@ -47,6 +47,11 @@ app.use(
     resave: false,
     secret: process.env.SECRET_COOKIE_KEY!,
     name: process.env.SESSION_NAME,
+    cookie: {
+      httpOnly: true,
+      secure: false, // https 적용하게 되면 true로
+      domain: process.env.NODE_ENV === "production" ? ".youtil.store" : "",
+    },
   })
 );
 app.use(passport.initialize());

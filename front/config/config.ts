@@ -1,2 +1,2 @@
-export const backUrl = "http://13.125.97.101";
+export const backUrl = process.env.NODE_ENV === "production" ? "http://api.youtil.store" : "http://localhost";
 export const publicPath = "/public/";
