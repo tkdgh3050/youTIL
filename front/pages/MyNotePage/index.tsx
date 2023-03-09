@@ -4,7 +4,7 @@ import { lodePlayList } from '../../actions/note';
 import { useNavigate } from 'react-router';
 
 import Title from '../../components/title';
-import PlayList from '../../components/playList';
+import PlayListComp from '../../components/playList';
 import { RootState } from '../../reducers';
 import { NoteState } from '../../reducers/note';
 import { useAppDispatch } from '../../store/configureStore';
@@ -91,7 +91,7 @@ const MyNote = () => {
           <StyledButton className='primary' onClick={onClickAddPlayList}>재생목록 추가</StyledButton>
         </AllListControlDivWrapper>
         {note.playList?.length
-          ? note.playList.map((data) => <PlayList key={data.playListName} data={data} clickAddVideoList={clickAddVideoList} clickDeletePlayList={clickDeletePlayList} clickDeleteVideo={clickDeleteVideo} />)
+          ? note.playList.map((data) => <PlayListComp key={data.playListName} data={data} clickAddVideoList={clickAddVideoList} clickDeletePlayList={clickDeletePlayList} clickDeleteVideo={clickDeleteVideo} />)
           : <div>재생목록이 없습니다.</div>
         }
       </CenterDivWrapper>

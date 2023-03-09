@@ -13,7 +13,7 @@ type propType = {
   clickDeletePlayList(id: number[], name: string): void,
   clickDeleteVideo(id: number[], name: string): void,
 };
-const PlayList: FunctionComponent<propType> = ({ data, clickAddVideoList, clickDeletePlayList, clickDeleteVideo }) => {
+const PlayListComp: FunctionComponent<propType> = ({ data, clickAddVideoList, clickDeletePlayList, clickDeleteVideo }) => {
 
   const onClickToggle = (e: React.MouseEvent<HTMLDivElement>) => {
     e.currentTarget.classList.toggle('active');
@@ -50,4 +50,4 @@ const PlayList: FunctionComponent<propType> = ({ data, clickAddVideoList, clickD
   )
 };
 
-export default PlayList;
+export default PlayListComp;
