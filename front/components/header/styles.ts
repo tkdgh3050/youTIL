@@ -38,6 +38,7 @@ export const SidebarWrapper = styled.div<{ open: boolean }>`
   flex-direction: row;
   align-items: center;
   font-size: var(--font-size-m);
+  z-index: 10;
   & span {
     line-height: 60px;
     margin-left: var(--padding-size-l);
