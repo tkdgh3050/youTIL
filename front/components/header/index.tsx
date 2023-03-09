@@ -19,10 +19,6 @@ const Header: FunctionComponent = () => {
     document.title = 'YouTIL'
   }, [])
 
-  useEffect(() => {
-    // if (!user.userInfo && )
-  }, [user]);
-
   const openSidebar = useCallback(() => {
     setIsSidebarOpen(true);
     if (sidebarRef.current) {
@@ -54,7 +50,7 @@ const Header: FunctionComponent = () => {
             : <span><Link to={'/login'}>로그인</Link></span>
           }
           <span><Link to={'/'}>메인페이지</Link></span>
-          <span><Link to={'/notice'}>공지사항</Link></span>
+          {/* <span><Link to={'/notice'}>공지사항</Link></span> */}
           {user.userInfo
             && <span><Link to={'/myNote'}>내 노트</Link></span>
           }
