@@ -3,7 +3,6 @@ const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 import { Configuration as WebpackConfiguration } from "webpack";
 import { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
-console.log(path.join(__dirname, "node_modules"));
 
 interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
@@ -11,8 +10,8 @@ interface Configuration extends WebpackConfiguration {
 //TODO: mode, devtool 배포시 변경
 const config: Configuration = {
   name: "youTIL",
-  mode: "development", //production
-  devtool: "eval", // hidden-source-map
+  mode: "production", //production //development
+  devtool: "hidden-source-map", // hidden-source-map //eval
   resolve: {
     extensions: [".jsx", ".js", ".tsx", ".ts"],
   },

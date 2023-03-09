@@ -14,7 +14,7 @@ import passportConfig from "./passport";
 
 dotenv.config();
 const app = express();
-const port = 3065;
+const port = 80;
 
 if (process.env.NODE_ENV === "production") {
   app.use(morgan("combined"));
