@@ -27,17 +27,14 @@ const config: Configuration = {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
       },
-      // {
-      //   test: /\.(png|svg|jpg|jpeg|gif)$/i,
-      //   type: 'asset/resource',
-      // },
-      // {
-      //   test: /\.(woff|woff2|eot|ttf|otf)$/i,
-      //   type: 'asset/resource',
-      // },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        exclude: path.join(__dirname, "node_modules"),
+        use: ["url-loader"],
+      },
     ],
   },
-  plugins: [new HtmlWebpackPlugin({ template: `./index.html` }), new CleanWebpackPlugin()],
+  plugins: [new HtmlWebpackPlugin({ template: `./index.html`, favicon: `./public/favicon.ico` }), new CleanWebpackPlugin()],
   output: {
     filename: "app.js",
     path: path.join(__dirname, "dist"),
