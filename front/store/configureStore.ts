@@ -13,7 +13,7 @@ const store = configureStore({
       return getDefaultMiddleware();
     }
   },
-  devTools: process.env.NODE_ENV !== "production",
+  devTools: process.env.NODE_ENV === "development",
 });
 
 export type AppDispatch = typeof store.dispatch;

@@ -7,7 +7,7 @@ import { Configuration as WebpackDevServerConfiguration } from "webpack-dev-serv
 interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
 }
-//TODO: mode, devtool 배포시 변경
+
 const config: Configuration = {
   name: "youTIL",
   resolve: {
@@ -29,7 +29,6 @@ const config: Configuration = {
       },
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/,
-        exclude: path.join(__dirname, "node_modules"),
         use: [
           {
             loader: "file-loader",
