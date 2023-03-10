@@ -1,6 +1,5 @@
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+
 import { Configuration as WebpackConfiguration } from "webpack";
 import { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
 
@@ -41,7 +40,7 @@ const config: Configuration = {
       },
     ],
   },
-  plugins: [new HtmlWebpackPlugin({ template: `./index.html` }), new CleanWebpackPlugin()],
+  //
   output: {
     filename: "app.js",
     path: path.join(__dirname, "dist"),
