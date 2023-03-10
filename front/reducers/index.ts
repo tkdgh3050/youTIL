@@ -1,7 +1,15 @@
 import { combineReducers } from "redux";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 import userSlice from "./user";
 import noteSlice from "./note";
+
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["user"],
+};
 
 const rootReducer = combineReducers({
   //reducer 들 넣기
@@ -11,4 +19,4 @@ const rootReducer = combineReducers({
 
 export type RootState = ReturnType<typeof rootReducer>;
 
-export default rootReducer;
+export default persistReducer(persistConfig, rootReducer);
