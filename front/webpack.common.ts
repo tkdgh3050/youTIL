@@ -1,6 +1,6 @@
 const path = require("path");
-const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 import { Configuration as WebpackConfiguration } from "webpack";
 import { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
 
@@ -19,7 +19,7 @@ const config: Configuration = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.(ts|tsx)$/,
         loader: "ts-loader", //tsx 파일을 ts-loader를 사용해서 맞는 문법으로 변경
         exclude: path.join(__dirname, "node_modules"),
       },
@@ -27,9 +27,17 @@ const config: Configuration = {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
       },
+      // {
+      //   test: /\.(png|svg|jpg|jpeg|gif)$/i,
+      //   type: 'asset/resource',
+      // },
+      // {
+      //   test: /\.(woff|woff2|eot|ttf|otf)$/i,
+      //   type: 'asset/resource',
+      // },
     ],
   },
-  plugins: [new ReactRefreshPlugin(), new ForkTsCheckerWebpackPlugin()],
+  plugins: [new HtmlWebpackPlugin({ template: `./index.html` }), new CleanWebpackPlugin()],
   output: {
     filename: "app.js",
     path: path.join(__dirname, "dist"),

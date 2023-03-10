@@ -1,6 +1,5 @@
-import React, { FunctionComponent } from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import styled from 'styled-components';
 
 import { GlobalStyle, RoutesWrapper } from './GlobalStyle';
 import Footer from '../components/footer';
@@ -12,22 +11,23 @@ import Notice from './NoticePage';
 import MyNote from './MyNotePage';
 import VideoView from './VideoViewPage';
 
-const App: FunctionComponent = () => {
+const App = () => {
   return (
     <>
       <GlobalStyle />
       <BrowserRouter>
         <Header />
         <RoutesWrapper>
-          <Routes>
-            {/* <Route path="/videoView/:videoId" element={<VideoView />} /> */}
-            <Route path="/videoView" element={<VideoView />} />
-            <Route path="/notice" element={<Notice />} />
-            <Route path="/myNote" element={<MyNote />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Landing />} />
-          </Routes>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route path="/videoView" element={<VideoView />} />
+              <Route path="/notice" element={<Notice />} />
+              <Route path="/myNote" element={<MyNote />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<Landing />} />
+            </Routes>
+          </Suspense>
         </RoutesWrapper>
         <Footer />
       </BrowserRouter>

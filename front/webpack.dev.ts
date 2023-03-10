@@ -1,5 +1,8 @@
 const { merge } = require("webpack-merge");
 const path = require("path");
+const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 import common from "./webpack.common";
 
 const config = merge(common, {
@@ -13,6 +16,16 @@ const config = merge(common, {
       },
     ],
   },
+  plugins: [
+    new BundleAnalyzerPlugin({
+      analyzerMode: "static",
+      openAnalyzer: false,
+      generateStatsFile: true,
+      statsFilename: "bundle-report.json",
+    }),
+    new ReactRefreshPlugin(),
+    new ForkTsCheckerWebpackPlugin(),
+  ],
   devServer: {
     devMiddleware: { publicPath: "/dist" },
     static: { directory: path.resolve(__dirname) },
