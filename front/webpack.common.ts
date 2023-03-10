@@ -28,13 +28,21 @@ const config: Configuration = {
         use: ["style-loader", "css-loader"],
       },
       {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        test: /\.(png|svg|jpg|jpeg|gif)$/,
         exclude: path.join(__dirname, "node_modules"),
-        use: ["url-loader"],
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              publicPath: "./dist/public/",
+              name: "[name].[ext]",
+            },
+          },
+        ],
       },
     ],
   },
-  plugins: [new HtmlWebpackPlugin({ template: `./index.html`, favicon: `./public/favicon.ico` }), new CleanWebpackPlugin()],
+  plugins: [new HtmlWebpackPlugin({ template: `./index.html` }), new CleanWebpackPlugin()],
   output: {
     filename: "app.js",
     path: path.join(__dirname, "dist"),
