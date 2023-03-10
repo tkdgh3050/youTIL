@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack.prod.ts",
+    "build": "NODE_ENV=production webpack --config webpack.prod.ts",
     "analyze": "webpack-bundle-analyzer ./dist/bundle-report.json --default-sizes gzip",
     "dev": "webpack serve --config webpack.dev.ts"
   },
