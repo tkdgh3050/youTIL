@@ -40,7 +40,7 @@ const MyNote = () => {
     const req = dispatch(lodePlayList());
     req.unwrap()
       .then((result) => {
-        console.log('done', result);
+        // console.log('done', result);
       })
       .catch((err) => {
         console.log(err);
