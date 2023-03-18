@@ -9,6 +9,7 @@ export const ContentDivWrapper = styled.div`
   height: 70vh;
   & .mainWrapper {
     flex: 1 1 33%;
+    width: 30vw;
     padding: var(--padding-size-s);
   }
   @media screen and (max-width: 768px) {
