@@ -19,7 +19,7 @@ const PinnedVideoList = () => {
       <TitleSpan><i className="fa-solid fa-star"></i> 즐겨찾기 동영상</TitleSpan>
       <MainVideoDivWrapper>
         {
-          note.pinnedVideoList
+          note.pinnedVideoList?.length
             ? note.pinnedVideoList.map((video) => <MainVideo key={video.id} videoType='pinnedVideoList' videoData={video} />)
             : <div>즐겨찾기한 동영상이 없습니다.</div>
         }

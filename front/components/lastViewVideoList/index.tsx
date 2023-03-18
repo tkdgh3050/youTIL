@@ -20,7 +20,7 @@ export const LastViewVideoList = () => {
       <TitleSpan><i className="fa-solid fa-eye"></i> 시청 중 동영상</TitleSpan>
       <MainVideoDivWrapper>
         {
-          note.lastViewVideoList
+          note.lastViewVideoList?.length
             ? note.lastViewVideoList.map((video) => <MainVideo key={video.id} videoType='lastViewVideoList' videoData={video} />)
             : <div>시청 중인 동영상이 없습니다.</div>
         }

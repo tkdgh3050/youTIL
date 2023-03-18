@@ -19,7 +19,7 @@ const RecentAddVideoList = () => {
       <TitleSpan><i className="fa-solid fa-file-circle-plus"></i> 최근 추가 동영상</TitleSpan>
       <MainVideoDivWrapper>
         {
-          note.recentAddVideoList
+          note.recentAddVideoList?.length
             ? note.recentAddVideoList.map((video) => <MainVideo key={video.id} videoType='recentAddVideoList' videoData={video} />)
             : <div>최근 추가한 동영상이 없습니다.</div>
         }
