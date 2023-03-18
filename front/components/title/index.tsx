@@ -8,7 +8,7 @@ const TitleH2Wrapper = styled.h2`
 
 const Title: FunctionComponent<{ title: string }> = ({ title }) => {
   useEffect(() => {
-    document.title = `${title} | YouTIL`
+    document.title = title === '' ? 'YouTIL' : `${title} | YouTIL`
   }, [title])
 
   return (

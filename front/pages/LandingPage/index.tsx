@@ -20,6 +20,7 @@ const LandingPage: FunctionComponent = () => {
         </>
         : //로그인하지 않은 경우 YouTIL 소개 페이지
         <>
+          <Title title={''} />
           <IntroMain />
         </>
       }
