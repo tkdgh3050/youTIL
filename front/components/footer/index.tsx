@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 
 import { Wrapper } from './styles';
 
+// footer 부분
 const Footer: FunctionComponent = () => {
   return (
     <>

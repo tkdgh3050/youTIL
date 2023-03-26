@@ -9,15 +9,19 @@ type props = {
   textNote: string,
   setTextNote: React.Dispatch<React.SetStateAction<string>>
 }
+
+// 텍스트 에디터 component
 const CustomTextEditor: FunctionComponent<props> = ({ finalTranscript, textNote, setTextNote }) => {
   // const [TextState, setTextState] = useState('');
   const TextStateRef = useRef<HTMLElement | null>(null);
 
   const onChangeTextEditor = useCallback((e: ContentEditableEvent) => {
+    // 텍스트 에디터 내부에 값이 변경될 때 마다 purify 진행한 값을 저장해주는 이벤트
     setTextNote(DOMPurify.sanitize(e.target.value));
   }, []);
 
   const onClickOperation = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    // 텍스트에디터 내부 오퍼레이션을 적용해주는 이벤트
     let command = e.currentTarget.dataset.operation;
     if (command) {
       document.execCommand(command, false);
@@ -28,6 +32,7 @@ const CustomTextEditor: FunctionComponent<props> = ({ finalTranscript, textNote,
   }, [TextStateRef]);
 
   useEffect(() => {
+    // STT가 진행되면 finalTranscript 값이 prop으로 들어오고 그 값을 텍스트 에디터에도 추가해주는 로직
     setTextNote((prev) => prev + finalTranscript);
   }, [finalTranscript]);
 

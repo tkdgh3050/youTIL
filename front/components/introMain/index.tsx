@@ -11,8 +11,7 @@ const IntroDivWrapper = styled.div`
   flex-direction: column;
 `;
 
-
-
+// 인트로 페이지 구성 컴포넌트
 const IntroMain = () => {
   return (
     <IntroDivWrapper>

@@ -6,16 +6,20 @@ import { StyledButton } from '../playList/styles';
 import { useAppDispatch } from '../../store/configureStore';
 import { deletePlayList, deleteVideo } from '../../actions/note';
 
+// 재생목록, 동영상 삭제 버튼 클릭 시, 확인을 위한 다이얼로그 창
 const DeleteConfirmDialog: FunctionComponent<{ deleteConfirmDialogRef: React.RefObject<HTMLDialogElement>, flag: deleteFlag, id: number[], name: string }> = ({ deleteConfirmDialogRef, flag, id, name }) => {
   const dispatch = useAppDispatch();
+
   const onClose = useCallback(() => {
+    // 닫기 버튼 클릭 시 다이얼로그 닫아주는 이벤트
     deleteConfirmDialogRef.current?.close();
   }, [deleteConfirmDialogRef]);
 
   const onClickDeleteConfirm = useCallback(() => {
-    console.log('confirm', flag);
+    // 삭제 확인을 클릭 시 처리하는 이벤트
+
     if (flag === 'playList') {
-      console.log('delete playlist', id[0]);
+      // 플레이리스트를 삭제한 경우
       dispatch(deletePlayList(id[0])).unwrap()
         .then((result) => {
           alert('재생목록 삭제완료 하였습니다.');
@@ -24,7 +28,7 @@ const DeleteConfirmDialog: FunctionComponent<{ deleteConfirmDialogRef: React.Ref
           alert(`재생목록 삭제에 실패했습니다. ${err.message}`);
         })
     } else if (flag === 'video') {
-      console.log('delete video', id, name);
+      // 비디오를 삭제한 경우
       const [videoId, playListId] = id;
       dispatch(deleteVideo({ videoId, playListId })).unwrap()
         .then((result) => {
@@ -34,6 +38,8 @@ const DeleteConfirmDialog: FunctionComponent<{ deleteConfirmDialogRef: React.Ref
           alert(`동영상 삭제에 실패했습니다. ${err.message}`);
         })
     }
+
+    //삭제 완료 후 다이얼로그 창 닫기
     onClose();
   }, [flag, id]);
 

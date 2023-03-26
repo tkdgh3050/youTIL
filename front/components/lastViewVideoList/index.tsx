@@ -8,10 +8,13 @@ import { useAppDispatch } from '../../store/configureStore';
 import MainVideo from '../mainVideo';
 import { ListDivWrapper, TitleSpan, MainVideoDivWrapper } from './styles';
 
+// 메인페이지 - 시청 중 동영상 부분 컴포넌트
 export const LastViewVideoList = () => {
   const note = useSelector<RootState, NoteState>((state) => state.note);
   const dispatch = useAppDispatch();
+
   useEffect(() => {
+    //시청 중 동영상 초기 로드
     dispatch(loadLastViewVideoList()).unwrap();
   }, [])
 

@@ -20,6 +20,7 @@ const HowToDivWrapper = styled.div`
   }
 `;
 
+// 인트로페이지 - YouTIL 어떻게 사용하는지 설명 부분
 const HowToSection = () => {
   return (
     <>

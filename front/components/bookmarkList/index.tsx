@@ -8,20 +8,23 @@ import { VideoControlDivWrapper } from '../videoList/styles';
 
 import { ListDivWrapper, ListControlDivWrapper } from './styles';
 
-
+// videoView에서 북마크 리스트 보여주는 component
 const BookmarkList: FunctionComponent<{ videoHandler: YouTubePlayer, bookmarks: Bookmark[] | undefined, clickBookmark: (time: number) => void }> = memo(({ videoHandler, bookmarks, clickBookmark }) => {
   const dispatch = useAppDispatch();
 
   const onClickToggle = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    // 북마크 리스트 토글방식으로 보여줬다가 안보여줬다가 하는 이벤트
     e.currentTarget.classList.toggle('active');
     e.currentTarget.parentElement?.nextElementSibling?.classList.toggle('active');
   }, []);
 
   const onClickBookmark = useCallback((time: number) => (e: React.MouseEvent<HTMLSpanElement>) => {
+    // 북마크 추가 버튼을 클릭시 발생 이벤트
     clickBookmark(time);
   }, [clickBookmark]);
 
   const onClickDeleteBookmark = useCallback((id: number) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    // 북마크 제거 버튼을 클릭시 발생 이벤트
     dispatch(deleteBookmark(id));
   }, [videoHandler]);
 

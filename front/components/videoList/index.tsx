@@ -10,10 +10,12 @@ type propType = {
   playListId: number,
 };
 
+// 내 비디오 리스트에서 비디오 리스트 부분 컴포넌트
 const VideoList: FunctionComponent<propType> = ({ data, clickDeleteVideo, playListId }) => {
   const queryString = useRef<PlayListInVideo>({ playListId: playListId, videoId: data.id });
 
   const onClickDeleteVideo = useCallback(() => {
+    // 비디오 삭제 클릭 시
     clickDeleteVideo([data.id, playListId], data.videoName);
   }, []); //'/videoView?playListId=' + playListId + '&videoId=' + data.id
 

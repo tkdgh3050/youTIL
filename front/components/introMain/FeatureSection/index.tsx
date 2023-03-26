@@ -2,6 +2,7 @@ import React, { } from 'react';
 
 import { FeatureDivWrapper, LineDivWrapper, BoxDivWrapper } from './styles';
 
+// 인트로페이지 - YouTIL 특징 부분
 const FeatureSection = () => {
   return (
     <FeatureDivWrapper>

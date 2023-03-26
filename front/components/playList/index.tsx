@@ -13,18 +13,23 @@ type propType = {
   clickDeletePlayList(id: number[], name: string): void,
   clickDeleteVideo(id: number[], name: string): void,
 };
+
+// 내 플레이리스트 화면에서 플레이리스트 그려주는 컴포넌트
 const PlayListComp: FunctionComponent<propType> = ({ data, clickAddVideoList, clickDeletePlayList, clickDeleteVideo }) => {
 
   const onClickToggle = (e: React.MouseEvent<HTMLDivElement>) => {
+    // 플레이리스트 토글 클릭 시 닫혔다가 열렸다가 함
     e.currentTarget.classList.toggle('active');
     e.currentTarget.parentElement?.nextElementSibling?.classList.toggle('active');
   }
 
   const onClickAddVideoListButton = useCallback(() => {
+    // 비디오 추가 눌렀을 시 상위 컴포넌트로 아이디 값 넘겨줌
     clickAddVideoList([data.id]);
   }, [data]);
 
   const onClickDeleteListButton = useCallback(() => {
+    // 플레이리스트 삭제 버튼 눌었을 시 상위 컴포넌트로 값 넘겨줌
     clickDeletePlayList([data.id], data.playListName);
   }, [data]);
 

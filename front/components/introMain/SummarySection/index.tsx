@@ -21,6 +21,7 @@ const SummaryDivWrapper = styled.div<{ publicPath: string }>`
   }
 `;
 
+// 인트로페이지 - YouTIL 소개 부분
 const SummarySection = () => {
   return (
     <>

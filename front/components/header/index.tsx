@@ -8,6 +8,7 @@ import { UserState } from '../../reducers/user';
 import { useAppDispatch } from '../../store/configureStore';
 import { userLogout } from '../../actions/user';
 
+// header 부분
 const Header: FunctionComponent = () => {
   const user = useSelector<RootState, UserState>((state) => state.user);
   const dispatch = useAppDispatch();
@@ -20,17 +21,21 @@ const Header: FunctionComponent = () => {
   }, [])
 
   const openSidebar = useCallback(() => {
+    // 사이드바 열었을 때 로직
     setIsSidebarOpen(true);
     if (sidebarRef.current) {
+      // 포커스를 줘서 포커스가 나가면 창 닫히도록 설정
       sidebarRef.current.focus();
     }
   }, [sidebarRef]);
 
   const closeSidebar = useCallback(() => {
+    // 사이드바 닫았을 때 로직
     setIsSidebarOpen(false);
   }, [IsSidebarOpen]);
 
   const onClickLogout = useCallback(() => {
+    // 로그아웃 클릭 시 이벤트
     dispatch(userLogout()).unwrap()
       .then((result) => {
         alert('로그아웃 하였습니다.');

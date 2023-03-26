@@ -9,6 +9,7 @@ import { UserState } from '../../reducers/user';
 import { useAppDispatch } from '../../store/configureStore';
 import { ErrorDivWrapper, FormDivWrapper, FormWrapper, OperationDivWrapper } from './styles';
 
+// 로그인 하는 페이지
 const LoginPage: FunctionComponent = () => {
   const user = useSelector<RootState, UserState>((state) => state.user);
   const dispatch = useAppDispatch();
@@ -19,29 +20,36 @@ const LoginPage: FunctionComponent = () => {
   const [PasswordError, setPasswordError] = useState(false);
 
   useEffect(() => {
+    // 만약 로그인을 이미 한 경우 메인페이지로 돌아가도록 함
     if (user.userInfo) {
       navigator('/');
     }
   }, [user]);
 
   const onChangeEmail = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    // 이메일 변경 시 이벤트
     setEmail(e.target.value);
   }, []);
 
   const onChangePassword = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    // 비밀번호 변경 시 이벤트
     setPassword(e.target.value);
   }, []);
 
   const onSubmitUserLogin = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    // 로그인 버튼 클릭 시
     e.preventDefault();
     setEmailError(false);
     setPasswordError(false);
+
     dispatch(userLogin({ email: Email, password: Password })).unwrap()
       .then((result) => {
+        // 로그인 성공 시 메인페이지로
         alert(`${result.email} 님 환영합니다.`);
         navigator('/');
       })
       .catch((error: { status: number, data: { type: string, message: string } }) => {
+        // 로그인 실패 시
         if (error.status === 400) {
           if (error.data.type === 'email') {
             setEmailError(true);
@@ -57,6 +65,7 @@ const LoginPage: FunctionComponent = () => {
   }, [Email, Password]);
 
   if (user.userInfo) {
+    // 로그인 정보가 있을 경우 화면을 그릴 필요 없으므로 리턴함
     return null;
   }
 

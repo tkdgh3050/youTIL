@@ -7,6 +7,8 @@ import { StyledButton } from '../playList/styles';
 import { DialogWrapper, DialogFormWrapper, DialogMenuWrapper } from '../playListFormDialog/styles';
 
 const checkRegURL = (url: string): [isRegValid: boolean, regVideoURL: string] => {
+  // 입력한 URL 이 올바른 URL인지 확인한 뒤 필요한 비디오 아이디만 추출해서 리턴해주는 함수
+
   if (/^(http(s)?:\/\/youtu.be\/)/.test(url)) {
     const regURL = url.replace(/^(http(s)?:\/\/youtu.be\/)/, '');
     return [true, regURL];
@@ -23,6 +25,7 @@ const checkRegURL = (url: string): [isRegValid: boolean, regVideoURL: string] =>
   return [false, ''];
 }
 
+// 비디오 추가 클릭 시 뜨는 다이얼로그
 const VideoListFormDialog: FunctionComponent<{ addVideoListDialogRef: React.RefObject<HTMLDialogElement>, id?: number[] }> = ({ addVideoListDialogRef, id }) => {
   const dispatch = useAppDispatch();
   const [VideoName, setVideoName] = useState('');
@@ -32,17 +35,20 @@ const VideoListFormDialog: FunctionComponent<{ addVideoListDialogRef: React.RefO
   const [VideoURLRegError, setVideoURLRegError] = useState(false);
 
   const onChangeVideoName = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    // 비디오 이름 변경 시
     setVideoName(e.target.value);
     setVideoNameError(false);
   }, []);
 
   const onChangeVideoURL = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    // 비디오 URL 변경 시
     setVideoURL(e.target.value);
     setVideoURLError(false);
     setVideoURLRegError(false);
   }, []);
 
   const onSubmitAddVideoList = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    // 비디오 추가 버튼 클릭 시 유효성 체크하고 올바르다면 비디오 추가 진행
     e.preventDefault();
     if (!VideoName) {
       setVideoNameError(true);
@@ -79,6 +85,7 @@ const VideoListFormDialog: FunctionComponent<{ addVideoListDialogRef: React.RefO
   }, [VideoName, VideoURL, addVideoListDialogRef]);
 
   const onCloseAddVideo = useCallback(() => {
+    // 취소 클릭 시
     setVideoName('');
     setVideoURL('');
     setVideoNameError(false);

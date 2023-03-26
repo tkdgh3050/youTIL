@@ -10,14 +10,19 @@ type props = {
   time: number,
   clickBookmark: (time: number) => void,
 }
+
+// 이전 재싱시간 존재하는 비디오 보기 접근 시, 이어볼 지 여부 확인하는 다이얼로그
 const VideoViewContinueConfirmDialog: FunctionComponent<props> = ({ videoViewContinueConfirmDialogRef, time, clickBookmark }) => {
+
   const onClose = useCallback(() => {
+    // 취소 클릭 시
     if (videoViewContinueConfirmDialogRef.current) {
       videoViewContinueConfirmDialogRef.current.close();
     }
   }, [videoViewContinueConfirmDialogRef]);
 
   const onClickViewContinue = useCallback(() => {
+    // 계속 보기 클릭 시 북마크 클릭한 것과 동일하게 해당 위치 재생 진행
     clickBookmark(time);
     onClose();
   }, [videoViewContinueConfirmDialogRef, clickBookmark]);
