@@ -119,6 +119,7 @@ const noteSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
+    // 플레이리스트 불러오기
     [lodePlayList.pending.type]: state => {
       state.lodePlayListLoading = true;
       state.lodePlayListDone = false;
@@ -133,6 +134,7 @@ const noteSlice = createSlice({
       state.lodePlayListLoading = false;
       state.lodePlayListError = action.payload;
     },
+    // 플레이리스트 추가
     [addPlayList.pending.type]: state => {
       state.addPlayListLoading = true;
       state.addPlayListDone = false;
@@ -151,6 +153,7 @@ const noteSlice = createSlice({
       state.addPlayListLoading = false;
       state.addPlayListError = action.payload;
     },
+    // 비디오 추가
     [addVideoList.pending.type]: state => {
       state.addVideoListLoading = true;
       state.addVideoListDone = false;
@@ -172,6 +175,7 @@ const noteSlice = createSlice({
       state.addVideoListLoading = false;
       state.addVideoListError = action.payload;
     },
+    // 플레이리스트 삭제
     [deletePlayList.pending.type]: state => {
       state.deletePlayListLoading = true;
       state.deletePlayListDone = false;
@@ -189,6 +193,7 @@ const noteSlice = createSlice({
       state.deletePlayListLoading = false;
       state.deletePlayListError = action.payload;
     },
+    // 비디오 삭제
     [deleteVideo.pending.type]: state => {
       state.deleteVideoLoading = true;
       state.deleteVideoDone = false;
@@ -208,6 +213,7 @@ const noteSlice = createSlice({
       state.deleteVideoLoading = false;
       state.deleteVideoError = action.payload;
     },
+    // 비디오 정보들 불러오기
     [loadVideoInfoData.pending.type]: state => {
       state.loadVideoInfoDataLoading = true;
       state.loadVideoInfoDataDone = false;
@@ -222,6 +228,7 @@ const noteSlice = createSlice({
       state.loadVideoInfoDataLoading = false;
       state.loadVideoInfoDataError = action.payload;
     },
+    // 북마크 추가
     [addBookmark.pending.type]: state => {
       state.addBookmarkLoading = true;
       state.addBookmarkDone = false;
@@ -239,6 +246,7 @@ const noteSlice = createSlice({
       state.addBookmarkLoading = false;
       state.addBookmarkError = action.payload;
     },
+    // 북마크 삭제
     [deleteBookmark.pending.type]: state => {
       state.deleteBookmarkLoading = true;
       state.deleteBookmarkDone = false;
@@ -255,6 +263,7 @@ const noteSlice = createSlice({
       state.deleteBookmarkLoading = false;
       state.deleteBookmarkError = action.payload;
     },
+    // 필기와 마지막 본 시간 업데이트
     [updateTextNoteLastViewTime.pending.type]: state => {
       state.updateTextNoteLastViewTimeLoading = true;
       state.updateTextNoteLastViewTimeDone = false;
@@ -268,6 +277,7 @@ const noteSlice = createSlice({
       state.updateTextNoteLastViewTimeLoading = false;
       state.updateTextNoteLastViewTimeError = action.payload;
     },
+    // 즐겨찾기 업데이트
     [updateIsPinned.pending.type]: state => {
       state.updateIsPinnedLoading = true;
       state.updateIsPinnedDone = false;
@@ -284,6 +294,7 @@ const noteSlice = createSlice({
       state.updateIsPinnedLoading = false;
       state.updateIsPinnedError = action.payload;
     },
+    // 시청 중 동영상 리스트 불러오기
     [loadLastViewVideoList.pending.type]: state => {
       state.loadLastViewVideoListLoading = true;
       state.loadLastViewVideoListDone = false;
@@ -298,6 +309,7 @@ const noteSlice = createSlice({
       state.loadLastViewVideoListLoading = false;
       state.loadLastViewVideoListError = action.payload;
     },
+    // 최근 추가한 동영상 리스트 불러오기
     [loadRecentAddVideoList.pending.type]: state => {
       state.loadRecentAddVideoListLoading = true;
       state.loadRecentAddVideoListDone = false;
@@ -312,6 +324,7 @@ const noteSlice = createSlice({
       state.loadRecentAddVideoListLoading = false;
       state.loadRecentAddVideoListError = action.payload;
     },
+    // 최근 즐겨찾기한 동영상 리스트 불러오기
     [loadPinnedVideoList.pending.type]: state => {
       state.loadPinnedVideoListLoading = true;
       state.loadPinnedVideoListDone = false;

@@ -33,6 +33,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
+    // 로그인
     [userLogin.pending.type]: state => {
       state.loginLoading = true;
       state.loginDone = false;
@@ -47,6 +48,7 @@ const userSlice = createSlice({
       state.loginLoading = false;
       state.loginError = action.payload;
     },
+    // 로그아웃
     [userLogout.pending.type]: state => {
       state.logoutLoading = true;
       state.logoutDone = false;
@@ -61,6 +63,7 @@ const userSlice = createSlice({
       state.logoutLoading = false;
       state.logoutError = action.payload;
     },
+    // 회원가입
     [userRegister.pending.type]: state => {
       state.registerLoading = true;
       state.registerDone = false;
