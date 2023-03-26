@@ -1,3 +1,4 @@
+// 노트부분 퀴리 모음
 export const selectPlayListAll = `SELECT id, playlistName FROM PLAYLIST WHERE userID=? ORDER BY id DESC;`;
 export const selectVideoAllByPlayListId = `SELECT id, videoName, videoURL, lastViewTime FROM VIDEO WHERE playlistID=? ORDER BY id desc;`;
 export const insertPlayList = `INSERT INTO PLAYLIST(playlistName, userID) VALUES(?,?);`;

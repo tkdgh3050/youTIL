@@ -1,3 +1,5 @@
+// DB에서 값을 가져와서 리덕스로 돌려주기 위한 파일
+
 export interface PlayList {
   id: number;
   playListName: string;

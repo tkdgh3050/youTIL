@@ -1,4 +1,5 @@
 import { RowDataPacket } from "mysql2";
+// DB 값 불러올 때 타입 지정
 
 export interface user extends RowDataPacket {
   id: number;

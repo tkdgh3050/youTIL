@@ -5,12 +5,6 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { user } from "../database/rowTypes";
 import { selectUserOne, selectUserOneById } from "../database/UserQuery";
 
-// declare global {
-//   namespace Express {
-//     interface User extends user {}
-//   }
-// }
-
 export default () => {
   passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -27,7 +21,7 @@ export default () => {
   });
 
   passport.use(
-    new LocalStrategy(
+    new LocalStrategy( //로컬 전략 사용
       {
         usernameField: "email",
         passwordField: "password",

@@ -26,6 +26,8 @@ import { isLoggedInCheck, isNotLoggedInCheck } from "./middlewares";
 const router = express.Router();
 
 router.get("/", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  //GET note/
+  // 플레이리스트 불러오기
   try {
     const data: PlayList[] = [];
     const [playListRows] = await pool.query<playList[]>(selectPlayListAll, [req.user?.id]);
@@ -56,6 +58,8 @@ router.get("/", isLoggedInCheck, async (req: Request, res: Response, next: NextF
 });
 
 router.post("/playList", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  //POST note/playList
+  // 플레이리스트 저장
   try {
     const [result] = await pool.query<ResultSetHeader>(insertPlayList, [req.body.playListName, req.user?.id]);
     const data: PlayList = {
@@ -70,6 +74,8 @@ router.post("/playList", isLoggedInCheck, async (req: Request, res: Response, ne
 });
 
 router.delete("/playList/:playListId", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  //DELETE note/playList/:playListId
+  // 플레이리스트 불러오기
   try {
     const [result] = await pool.query<ResultSetHeader>(deletePlayList, [req.params.playListId, req.user?.id]);
     return res.status(201).send(req.params.playListId);
@@ -80,6 +86,8 @@ router.delete("/playList/:playListId", isLoggedInCheck, async (req: Request, res
 });
 
 router.post("/videoList", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  //POST note/videoList
+  // 비디오 저장
   try {
     const [result] = await pool.query<ResultSetHeader>(insertVideo, [
       req.body.videoName,
@@ -103,6 +111,8 @@ router.post("/videoList", isLoggedInCheck, async (req: Request, res: Response, n
 });
 
 router.delete("/videoList/:playListId/:videoId", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  //DELETE note/videoList/:playListId/:videoId
+  // 비디오 삭제
   try {
     const [result] = await pool.query<ResultSetHeader>(deleteVideo, [req.params.playListId, req.params.videoId]);
     const data: PlayListInVideo = {
@@ -117,6 +127,8 @@ router.delete("/videoList/:playListId/:videoId", isLoggedInCheck, async (req: Re
 });
 
 router.get("/videoInfo/:playListId/:videoId", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  //GET note/videoInfo/:playListId/:videoId
+  // 비디오 정보 불러오기
   try {
     const bookmarks: Bookmark[] = [];
     const [videoRow] = await pool.query<video[]>(selectVideoInfo, [req.params.playListId, req.params.videoId]);
@@ -138,6 +150,8 @@ router.get("/videoInfo/:playListId/:videoId", isLoggedInCheck, async (req: Reque
 });
 
 router.post("/bookmark", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  //POST note/bookmark
+  // 북마크 추가
   try {
     const [result] = await pool.query<ResultSetHeader>(insertBookmark, [
       req.body.time,
@@ -158,6 +172,8 @@ router.post("/bookmark", isLoggedInCheck, async (req: Request, res: Response, ne
 });
 
 router.delete("/bookmark/:bookmarkId", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  //DELETE note/bookmark/:bookmarkId
+  // 북마크 삭제
   try {
     const [result] = await pool.query<ResultSetHeader>(deleteBookmark, [req.params.bookmarkId]);
     return res.status(201).send(req.params.bookmarkId);
@@ -168,6 +184,8 @@ router.delete("/bookmark/:bookmarkId", isLoggedInCheck, async (req: Request, res
 });
 
 router.patch("/videoInfo/textNoteLastViewTime", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  //PATCH note/videoInfo/textNoteLastViewTime
+  // 비디오 정보 업데이트
   try {
     const [result] = await pool.query<ResultSetHeader>(updateVideoInfoTextNoteLastViewTime, [
       req.body.textNote,
@@ -182,6 +200,8 @@ router.patch("/videoInfo/textNoteLastViewTime", isLoggedInCheck, async (req: Req
 });
 
 router.patch("/videoInfo/isPinned", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  //PATCH note/videoInfo/isPinned
+  // 비디오 정보 중 즐겨찾기 부분 업데이트
   try {
     const [result] = await pool.query<ResultSetHeader>(updateIsPinned, [req.body.isPinned, req.body.playListInVideo.videoId]);
     return res.status(201).json(req.body.isPinned);
@@ -192,6 +212,8 @@ router.patch("/videoInfo/isPinned", isLoggedInCheck, async (req: Request, res: R
 });
 
 router.get("/loadLastViewVideoList", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  //GET note/loadLastViewVideoList
+  // 메인페이지 - 최근 본 페이지 리스트 불러오기
   try {
     const data: Video[] = [];
     const [videoRows] = await pool.query<video[]>(selectLastViewVideo, [req.user?.id]);
@@ -213,6 +235,8 @@ router.get("/loadLastViewVideoList", isLoggedInCheck, async (req: Request, res: 
 });
 
 router.get("/loadRecentAddVideoList", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  //GET note/loadRecentAddVideoList
+  // 메인페이지 - 최근 추가한 비디오 리스트 불러오기
   try {
     const data: Video[] = [];
     const [videoRows] = await pool.query<video[]>(selectRecentAddVideo, [req.user?.id]);
@@ -235,6 +259,8 @@ router.get("/loadRecentAddVideoList", isLoggedInCheck, async (req: Request, res:
 });
 
 router.get("/loadPinnedVideoList", isLoggedInCheck, async (req: Request, res: Response, next: NextFunction) => {
+  //GET note/loadPinnedVideoList
+  // 메인페이지 - 최근 즐겨찾기한 비디오 리스트 불러오기
   try {
     const data: Video[] = [];
     const [videoRows] = await pool.query<video[]>(selectPinnedVideo, [req.user?.id]);

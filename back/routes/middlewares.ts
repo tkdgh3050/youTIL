@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 export const isLoggedInCheck = (req: Request, res: Response, next: NextFunction) => {
+  // 로그인 한 사용자만 접근할 수 있게 확인하는 미들웨어
   if (req.isAuthenticated()) {
     next();
   } else {
@@ -9,6 +10,7 @@ export const isLoggedInCheck = (req: Request, res: Response, next: NextFunction)
 };
 
 export const isNotLoggedInCheck = (req: Request, res: Response, next: NextFunction) => {
+  // 로그인 안 한 사용자면 접근할 수 있게 확인하는 미들웨어
   if (!req.isAuthenticated()) {
     next();
   } else {

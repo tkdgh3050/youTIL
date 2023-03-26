@@ -17,6 +17,7 @@ const app = express();
 const port = 80;
 
 if (process.env.NODE_ENV === "production") {
+  // 운영일 경우 세팅
   app.use(morgan("combined"));
   app.use(helmet());
   app.use(hpp());
@@ -27,6 +28,7 @@ if (process.env.NODE_ENV === "production") {
     })
   );
 } else {
+  // 개발일 경우 세팅
   app.use(morgan("dev")); //front server에서 요청했을 시 로그 남겨줌
   app.use(
     cors({

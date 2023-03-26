@@ -66,6 +66,7 @@ router.post("/login", async (req: Request, res: Response, next: NextFunction) =>
 });
 
 router.post("/logout", isLoggedInCheck, (req: Request, res: Response, next: NextFunction) => {
+  //POST user/logout
   req.logout(err => {
     //request 내부의 passport login정보 삭제
     if (err) {
