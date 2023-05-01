@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const ContentDivWrapper = styled.div`
+const ContentDivWrapper = styled.div`
   display: flex;
   flex-direction: row;
   padding-top: 15vh;
@@ -22,3 +22,5 @@ export const ContentDivWrapper = styled.div`
     }
   }
 `;
+
+export default ContentDivWrapper;

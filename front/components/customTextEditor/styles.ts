@@ -1,5 +1,6 @@
-import styled from "styled-components";
-import ContentEditable from "react-contenteditable";
+import styled from 'styled-components';
+import ContentEditable from 'react-contenteditable';
+
 export const TextEditorDivWrapper = styled.div`
   display: flex;
   flex-direction: column;

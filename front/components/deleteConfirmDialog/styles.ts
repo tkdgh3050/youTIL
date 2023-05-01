@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const DialogConfirmWrapper = styled.div`
+const DialogConfirmWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -14,3 +14,5 @@ export const DialogConfirmWrapper = styled.div`
     margin-bottom: var(--padding-size-s);
   }
 `;
+
+export default DialogConfirmWrapper;

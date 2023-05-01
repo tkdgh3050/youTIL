@@ -1,10 +1,9 @@
-import React, { } from 'react';
+import React from 'react';
 
+import styled from 'styled-components';
 import FeatureSection from './FeatureSection';
 import HowToSection from './HowToSection';
 import SummarySection from './SummarySection';
-
-import styled from 'styled-components';
 
 const IntroDivWrapper = styled.div`
   display: flex;
@@ -12,15 +11,14 @@ const IntroDivWrapper = styled.div`
 `;
 
 // 인트로 페이지 구성 컴포넌트
-const IntroMain = () => {
+function IntroMain() {
   return (
     <IntroDivWrapper>
       <SummarySection />
       <FeatureSection />
       <HowToSection />
     </IntroDivWrapper>
-
-  )
-};
+  );
+}
 
 export default IntroMain;

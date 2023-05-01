@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const DialogWrapper = styled.dialog`
   border: 1px solid var(--color-third);

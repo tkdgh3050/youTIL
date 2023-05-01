@@ -1,4 +1,6 @@
-import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react';
+import React, {
+  useCallback, useState, useEffect, useRef,
+} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import YouTube, { YouTubeEvent, YouTubeProps, YouTubePlayer } from 'react-youtube';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
@@ -8,31 +10,26 @@ import BookmarkList from '../../components/bookmarkList';
 import CustomTextEditor from '../../components/customTextEditor';
 import Title from '../../components/title';
 import { StyledButton } from '../../components/playList/styles';
-import { VideoViewFlexWrapper, LeftWrapper, VideoViewOperationDivWrapper, EditorDivWrapper } from './styles';
+import {
+  VideoViewFlexWrapper, LeftWrapper, VideoViewOperationDivWrapper, EditorDivWrapper,
+} from './styles';
 import { useAppDispatch } from '../../store/configureStore';
 import { RootState } from '../../reducers';
-import { addBookmark, loadVideoInfoData, PlayListInVideo, updateIsPinned, updateTextNoteLastViewTime, Video } from '../../actions/note';
+import {
+  addBookmark,
+  loadVideoInfoData,
+  PlayListInVideo,
+  updateIsPinned,
+  updateTextNoteLastViewTime,
+  Video,
+} from '../../actions/note';
 import VideoViewContinueConfirmDialog from '../../components/videoViewContinueConfirmDialog';
 import { UserState } from '../../reducers/user';
 
-export const changeTimeStringToSeconds = (timeString: string) => {
-  // 00:02:03 => 353 과 같이 타임스탬프를 초로 바꿔주는 함수
-  const [hours, minutes, seconds] = timeString.split(':');
-  return Number(hours) * (60 ** 2) + Number(minutes) * 60 + Number(seconds);
-}
-
-export const changeSecondsToTimeString = (seconds: number) => {
-  // 353 => 00:02:03 과 같이 초를 타임스탬프로 변경해주는 함수
-  const hours = Math.trunc(seconds / 3600) < 10 ? '0' + Math.trunc(seconds / 3600) : Math.trunc(seconds / 3600).toString();
-  const mins = Math.trunc((seconds % 3600) / 60) < 10 ? '0' + Math.trunc((seconds % 3600) / 60) : Math.trunc((seconds % 3600) / 60).toString();
-  const secs = seconds % 60 < 10 ? '0' + Math.trunc(seconds % 60) : Math.trunc(seconds % 60).toString();
-  return [hours, mins, secs].join(':');
-};
-
 // 비디오 보는 페이지
-const VideoView = () => {
-  const videoInfo = useSelector<RootState, Video | null>((state) => state.note.videoInfo);
-  const user = useSelector<RootState, UserState>((state) => state.user);
+function VideoView() {
+  const videoInfo = useSelector<RootState, Video | null>(state => state.note.videoInfo);
+  const user = useSelector<RootState, UserState>(state => state.user);
   const navigator = useNavigate();
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -46,15 +43,9 @@ const VideoView = () => {
   const opts: YouTubeProps['opts'] = useRef({
     playerVars: {
       modestbranding: 1,
-    }
+    },
   }); // 유튜브API 기본 설정
-  const {
-    transcript,
-    finalTranscript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition
-  } = useSpeechRecognition(); // STT API 기본 state
+  const { finalTranscript, listening, resetTranscript } = useSpeechRecognition(); // STT API 기본 state
 
   useEffect(() => {
     // 로그인 하지 않은 경우 로그인 페이지로 리다이렉션
@@ -66,7 +57,8 @@ const VideoView = () => {
 
   useEffect(() => {
     // 비디오 정보 로드하는 부분
-    dispatch(loadVideoInfoData(queryString.current)).unwrap()
+    dispatch(loadVideoInfoData(queryString.current))
+      .unwrap()
       .then(result => {
         if (result?.videoURL) {
           setVideoId(result.videoURL);
@@ -77,8 +69,8 @@ const VideoView = () => {
         if (result?.lastViewTime) {
           setContinueTime(result.lastViewTime);
         }
-      })
-  }, [])
+      });
+  }, []);
 
   useEffect(() => {
     // 비디오에 이전 보던 시간이 존재하는 경우 이어볼지 여부 확인하는 다이얼로그 띄우기
@@ -90,16 +82,6 @@ const VideoView = () => {
   }, [videoViewContinueConfirmDialogRef, ContinueTime, VideoHandler]);
 
   useEffect(() => {
-    // 글을 작성하다가 다른 곳으로 이동한 경우 저장
-    return () => {
-      if (VideoHandler) {
-        // 나갈 때도 저장됨
-        saveNoteData();
-      }
-    }
-  }, [TextNote, VideoHandler]);
-
-  useEffect(() => {
     // STT가 끝나면 finalTranscript 가 만들어지고, 기존 STT 한 부분은 리셋해주기 위한 로직
     resetTranscript();
   }, [finalTranscript]);
@@ -108,35 +90,50 @@ const VideoView = () => {
     // 현재 상태 저장 로직
     let now = VideoHandler.getCurrentTime();
     const total = VideoHandler.getDuration();
-    if (total - 10 <= now) { // 끝나기 10초 전까지 봤으면 다 본 것으로 처리
+    if (total - 10 <= now) {
+      // 끝나기 10초 전까지 봤으면 다 본 것으로 처리
       now = 0;
     }
     const data = {
       textNote: TextNote,
       lastViewTime: now,
-      playListInVideo: queryString.current
-    }
+      playListInVideo: queryString.current,
+    };
     dispatch(updateTextNoteLastViewTime(data));
   }, [TextNote, VideoHandler]);
+
+  useEffect(
+    () => () => {
+      if (VideoHandler) {
+        // 나갈 때도 저장됨
+        saveNoteData();
+      }
+    },
+    [TextNote, VideoHandler],
+  );
 
   const onReadyPlayer: YouTubeProps['onReady'] = useCallback((e: YouTubeEvent<any>) => {
     // 유튜브 API가 비디오를 다 불러온 경우 실행. 해당 비디오를 컨트롤 할 수 있는 객체를 저장해둠
     setVideoHandler(e.target);
   }, []);
 
-  const onStateChange = useCallback((event: YouTubeEvent<number>) => {
-    // 비디오를 멈추거나 재생할때도 마지막으로 본 위치 저장하기 위한 함수
-    if (event.data === 1 || event.data === 2) { // 1은 동영상 재생, 2는 동영상 멈춤
-      saveNoteData();
-    }
-  }, [TextNote, VideoHandler])
+  const onStateChange = useCallback(
+    (event: YouTubeEvent<number>) => {
+      // 비디오를 멈추거나 재생할때도 마지막으로 본 위치 저장하기 위한 함수
+      if (event.data === 1 || event.data === 2) {
+        // 1은 동영상 재생, 2는 동영상 멈춤
+        saveNoteData();
+      }
+    },
+    [TextNote, VideoHandler],
+  );
 
   const onClickAddBookmark = useCallback(() => {
     // 북마크 추가 버튼 클릭 시
     const data = {
       time: VideoHandler.getCurrentTime(),
       playListInVideo: queryString.current,
-    }
+    };
     dispatch(addBookmark(data)).unwrap();
   }, [VideoHandler]);
 
@@ -172,18 +169,21 @@ const VideoView = () => {
     const data = {
       isPinned: videoInfo?.isPinned === 1 ? 0 : 1,
       playListInVideo: queryString.current,
-    }
+    };
     dispatch(updateIsPinned(data)).unwrap();
   }, [videoInfo?.isPinned]);
 
-  const clickBookmark = useCallback((time: number) => {
-    // 북마크 클릭 시 해당 위치로 이동
-    VideoHandler.seekTo(time);
-  }, [VideoHandler]);
+  const clickBookmark = useCallback(
+    (time: number) => {
+      // 북마크 클릭 시 해당 위치로 이동
+      VideoHandler.seekTo(time);
+    },
+    [VideoHandler],
+  );
 
   if (!VideoId) {
     // 로딩중인 경우 표시
-    return <div>로딩중..</div>
+    return <div>로딩중..</div>;
   }
 
   return (
@@ -197,19 +197,33 @@ const VideoView = () => {
           </div>
           {/* operation buttons */}
           <VideoViewOperationDivWrapper>
-            <StyledButton className='normal' onClick={onClickAddBookmark}>북마크 추가</StyledButton>
-            {
-              listening
-                ? <StyledButton className='danger' onClick={onClickEnd}>STT 중단</StyledButton>
-                : <StyledButton className='normal' onClick={onClickStart}>STT 시작</StyledButton>
-            }
-            <StyledButton className='normal' onClick={onClickBefore}>&nbsp;- 10초</StyledButton>
-            <StyledButton className='normal' onClick={onClickAfter}>&nbsp;+ 10초</StyledButton>
-            {
-              videoInfo?.isPinned
-                ? <span onClick={onClickPin}><i className="fa-solid fa-star"></i></span>
-                : <span onClick={onClickPin}><i className="fa-regular fa-star"></i></span>
-            }
+            <StyledButton className="normal" onClick={onClickAddBookmark}>
+              북마크 추가
+            </StyledButton>
+            {listening ? (
+              <StyledButton className="danger" onClick={onClickEnd}>
+                STT 중단
+              </StyledButton>
+            ) : (
+              <StyledButton className="normal" onClick={onClickStart}>
+                STT 시작
+              </StyledButton>
+            )}
+            <StyledButton className="normal" onClick={onClickBefore}>
+              &nbsp;- 10초
+            </StyledButton>
+            <StyledButton className="normal" onClick={onClickAfter}>
+              &nbsp;+ 10초
+            </StyledButton>
+            {videoInfo?.isPinned ? (
+              <span onClick={onClickPin} onKeyDown={onClickPin} role="button" tabIndex={0}>
+                <i className="fa-solid fa-star" />
+              </span>
+            ) : (
+              <span onClick={onClickPin} onKeyDown={onClickPin} role="button" tabIndex={0}>
+                <i className="fa-regular fa-star" />
+              </span>
+            )}
           </VideoViewOperationDivWrapper>
           {/* bookmarks */}
           <BookmarkList videoHandler={VideoHandler} bookmarks={videoInfo?.bookmarkList} clickBookmark={clickBookmark} />
@@ -219,9 +233,13 @@ const VideoView = () => {
           <CustomTextEditor finalTranscript={finalTranscript} textNote={TextNote} setTextNote={setTextNote} />
         </EditorDivWrapper>
       </VideoViewFlexWrapper>
-      <VideoViewContinueConfirmDialog videoViewContinueConfirmDialogRef={videoViewContinueConfirmDialogRef} time={ContinueTime} clickBookmark={clickBookmark} />
+      <VideoViewContinueConfirmDialog
+        videoViewContinueConfirmDialogRef={videoViewContinueConfirmDialogRef}
+        time={ContinueTime}
+        clickBookmark={clickBookmark}
+      />
     </>
-  )
-};
+  );
+}
 
 export default VideoView;

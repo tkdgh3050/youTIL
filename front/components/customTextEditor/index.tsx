@@ -1,17 +1,21 @@
-import React, { FunctionComponent, useEffect, useState, useCallback, useRef } from 'react';
+import React, {
+  FunctionComponent, useEffect, useCallback, useRef,
+} from 'react';
 import DOMPurify from 'dompurify';
-import ContentEditable, { ContentEditableEvent } from 'react-contenteditable'
+import { ContentEditableEvent } from 'react-contenteditable';
 
-import { BookmarkSpan, TextEditorButton, TextEditorDiv, TextEditorDivWrapper, TextEditorHeaderDivWrapper } from './styles';
+import {
+  TextEditorButton, TextEditorDiv, TextEditorDivWrapper, TextEditorHeaderDivWrapper,
+} from './styles';
 
-type props = {
-  finalTranscript: string,
-  textNote: string,
-  setTextNote: React.Dispatch<React.SetStateAction<string>>
-}
+type Props = {
+  finalTranscript: string;
+  textNote: string;
+  setTextNote: React.Dispatch<React.SetStateAction<string>>;
+};
 
 // 텍스트 에디터 component
-const CustomTextEditor: FunctionComponent<props> = ({ finalTranscript, textNote, setTextNote }) => {
+const CustomTextEditor: FunctionComponent<Props> = ({ finalTranscript, textNote, setTextNote }) => {
   // const [TextState, setTextState] = useState('');
   const TextStateRef = useRef<HTMLElement | null>(null);
 
@@ -20,54 +24,57 @@ const CustomTextEditor: FunctionComponent<props> = ({ finalTranscript, textNote,
     setTextNote(DOMPurify.sanitize(e.target.value));
   }, []);
 
-  const onClickOperation = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    // 텍스트에디터 내부 오퍼레이션을 적용해주는 이벤트
-    let command = e.currentTarget.dataset.operation;
-    if (command) {
-      document.execCommand(command, false);
-    }
-    if (TextStateRef.current) {
-      TextStateRef.current.focus();
-    }
-  }, [TextStateRef]);
+  const onClickOperation = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      // 텍스트에디터 내부 오퍼레이션을 적용해주는 이벤트
+      const command = e.currentTarget.dataset.operation;
+      if (command) {
+        document.execCommand(command, false);
+      }
+      if (TextStateRef.current) {
+        TextStateRef.current.focus();
+      }
+    },
+    [TextStateRef],
+  );
 
   useEffect(() => {
     // STT가 진행되면 finalTranscript 값이 prop으로 들어오고 그 값을 텍스트 에디터에도 추가해주는 로직
-    setTextNote((prev) => prev + finalTranscript);
+    setTextNote(prev => prev + finalTranscript);
   }, [finalTranscript]);
 
   return (
-    <TextEditorDivWrapper >
+    <TextEditorDivWrapper>
       <TextEditorHeaderDivWrapper>
-        <TextEditorButton onClick={onClickOperation} type='button' data-operation="bold">
-          <i className="fa-solid fa-bold"></i>
+        <TextEditorButton onClick={onClickOperation} type="button" data-operation="bold">
+          <i className="fa-solid fa-bold" />
         </TextEditorButton>
-        <TextEditorButton onClick={onClickOperation} type='button' data-operation="italic">
-          <i className="fa-solid fa-italic"></i>
+        <TextEditorButton onClick={onClickOperation} type="button" data-operation="italic">
+          <i className="fa-solid fa-italic" />
         </TextEditorButton>
-        <TextEditorButton onClick={onClickOperation} type='button' data-operation="underline">
-          <i className="fa-solid fa-underline"></i>
+        <TextEditorButton onClick={onClickOperation} type="button" data-operation="underline">
+          <i className="fa-solid fa-underline" />
         </TextEditorButton>
-        <TextEditorButton onClick={onClickOperation} type='button' data-operation="insertUnorderedList">
-          <i className="fa-solid fa-list-ul"></i>
+        <TextEditorButton onClick={onClickOperation} type="button" data-operation="insertUnorderedList">
+          <i className="fa-solid fa-list-ul" />
         </TextEditorButton>
-        <TextEditorButton onClick={onClickOperation} type='button' data-operation="insertOrderedList">
-          <i className="fa-solid fa-list-ol"></i>
+        <TextEditorButton onClick={onClickOperation} type="button" data-operation="insertOrderedList">
+          <i className="fa-solid fa-list-ol" />
         </TextEditorButton>
-        <TextEditorButton onClick={onClickOperation} type='button' data-operation="insertHorizontalRule">
-          <i className="fa-solid fa-minus"></i>
+        <TextEditorButton onClick={onClickOperation} type="button" data-operation="insertHorizontalRule">
+          <i className="fa-solid fa-minus" />
         </TextEditorButton>
-        <TextEditorButton onClick={onClickOperation} type='button' data-operation="justifyLeft">
-          <i className="fa-solid fa-align-left"></i>
+        <TextEditorButton onClick={onClickOperation} type="button" data-operation="justifyLeft">
+          <i className="fa-solid fa-align-left" />
         </TextEditorButton>
-        <TextEditorButton onClick={onClickOperation} type='button' data-operation="justifyCenter">
-          <i className="fa-solid fa-align-center"></i>
+        <TextEditorButton onClick={onClickOperation} type="button" data-operation="justifyCenter">
+          <i className="fa-solid fa-align-center" />
         </TextEditorButton>
-        <TextEditorButton onClick={onClickOperation} type='button' data-operation="justifyRight">
-          <i className="fa-solid fa-align-right"></i>
+        <TextEditorButton onClick={onClickOperation} type="button" data-operation="justifyRight">
+          <i className="fa-solid fa-align-right" />
         </TextEditorButton>
-        <TextEditorButton onClick={onClickOperation} type='button' data-operation="justifyFull">
-          <i className="fa-solid fa-align-justify"></i>
+        <TextEditorButton onClick={onClickOperation} type="button" data-operation="justifyFull">
+          <i className="fa-solid fa-align-justify" />
         </TextEditorButton>
       </TextEditorHeaderDivWrapper>
       <TextEditorDiv
@@ -75,10 +82,10 @@ const CustomTextEditor: FunctionComponent<props> = ({ finalTranscript, textNote,
         html={textNote}
         disabled={false}
         onChange={onChangeTextEditor}
-        tagName='article'
-      ></TextEditorDiv>
+        tagName="article"
+      />
     </TextEditorDivWrapper>
-  )
+  );
 };
 
 export default CustomTextEditor;

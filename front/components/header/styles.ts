@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Wrapper = styled.div`
   border-bottom: 1px solid var(--color-gray-light);
@@ -60,9 +60,7 @@ export const SidebarWrapper = styled.div<{ open: boolean }>`
     position: fixed;
     font-weight: bold;
     top: 0;
-    ${({ open }) => {
-      return open ? "right: 0px;" : "right: -200px;";
-    }}
+    ${({ open }) => (open ? 'right: 0px;' : 'right: -200px;')}
     transition: .5s;
     background-color: var(--color-white);
     border: 1px solid var(--color-gray-light);
