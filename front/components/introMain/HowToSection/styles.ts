@@ -39,14 +39,14 @@ export const LineDivWrapper = styled.div`
   }
   & div {
     flex: 1 1 60%;
-    & img {
+    & video {
       width: 50vw;
     }
   }
   @media screen and (max-width: 768px) {
     flex-direction: column;
     & div {
-      & img {
+      & video {
         width: 80vw;
       }
     }

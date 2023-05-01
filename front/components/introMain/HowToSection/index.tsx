@@ -49,19 +49,25 @@ function HowToSection() {
         <LineDivWrapper>
           <span>1. 원하는 영상을 찾아</span>
           <div>
-            <img src={`${publicPath}HowTo_1.gif`} alt="사용법 설명 영상 1" />
+            <video autoPlay loop muted playsInline>
+              <source src={`${publicPath}HowTo_1.mp4`} type="video/mp4" />
+            </video>
           </div>
         </LineDivWrapper>
         <LineDivWrapper>
           <span>2. 공유링크를 복사하여</span>
           <div>
-            <img src={`${publicPath}HowTo_2.gif`} alt="사용법 설명 영상 2" />
+            <video autoPlay loop muted playsInline>
+              <source src={`${publicPath}HowTo_2.mp4`} type="video/mp4" />
+            </video>
           </div>
         </LineDivWrapper>
         <LineDivWrapper>
           <span>3. 동영상 추가</span>
           <div>
-            <img src={`${publicPath}HowTo_3.gif`} alt="사용법 설명 영상 3" />
+            <video autoPlay loop muted playsInline>
+              <source src={`${publicPath}HowTo_3.mp4`} type="video/mp4" />
+            </video>
           </div>
         </LineDivWrapper>
       </HowToDivWrapper>
