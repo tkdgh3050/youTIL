@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
 import {
   PlayList,
   lodePlayList,
@@ -18,7 +18,7 @@ import {
   loadLastViewVideoList,
   loadRecentAddVideoList,
   loadPinnedVideoList,
-} from "../actions/note";
+} from '../actions/note';
 
 export interface NoteState {
   playList: PlayList[] | null; // 내 노트정보
@@ -68,11 +68,11 @@ export interface NoteState {
 }
 
 const initialState: NoteState = {
-  playList: null, //내 노트정보
-  videoInfo: null, //비디오 정보
-  lastViewVideoList: null, //메인 - 시청 중 동영상
-  recentAddVideoList: null, //메인 - 최근 추가 동영상
-  pinnedVideoList: null, //메인 - 즐겨찾기 동영상
+  playList: null, // 내 노트정보
+  videoInfo: null, // 비디오 정보
+  lastViewVideoList: null, // 메인 - 시청 중 동영상
+  recentAddVideoList: null, // 메인 - 최근 추가 동영상
+  pinnedVideoList: null, // 메인 - 즐겨찾기 동영상
   lodePlayListLoading: false, // 내 노트정보 불러오기
   lodePlayListDone: false,
   lodePlayListError: null,
@@ -115,7 +115,7 @@ const initialState: NoteState = {
 };
 
 const noteSlice = createSlice({
-  name: "note",
+  name: 'note',
   initialState,
   reducers: {},
   extraReducers: {
@@ -269,7 +269,7 @@ const noteSlice = createSlice({
       state.updateTextNoteLastViewTimeDone = false;
       state.updateTextNoteLastViewTimeError = null;
     },
-    [updateTextNoteLastViewTime.fulfilled.type]: (state, action: PayloadAction<{ textNote: string; lastViewTime: number }>) => {
+    [updateTextNoteLastViewTime.fulfilled.type]: state => {
       state.updateTextNoteLastViewTimeLoading = false;
       state.updateTextNoteLastViewTimeDone = true;
     },

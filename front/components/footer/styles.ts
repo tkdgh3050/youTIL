@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const Wrapper = styled.div`
+const Wrapper = styled.div`
   width: 30vw;
   min-width: 200px;
   padding-left: var(--padding-size-m);
@@ -16,3 +16,5 @@ export const Wrapper = styled.div`
     color: var(--color-secondary);
   }
 `;
+
+export default Wrapper;
