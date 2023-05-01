@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const TermDivWrapper = styled.div`
+const TermDivWrapper = styled.div`
   margin-top: var(--padding-size-m);
   & input {
     margin: 0;
@@ -8,3 +8,5 @@ export const TermDivWrapper = styled.div`
     width: var(--font-size-ms);
   }
 `;
+
+export default TermDivWrapper;

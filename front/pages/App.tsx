@@ -11,7 +11,7 @@ import Notice from './NoticePage';
 import MyNote from './MyNotePage';
 import VideoView from './VideoViewPage';
 
-const App = () => {
+function App() {
   return (
     <>
       <GlobalStyle />
@@ -32,7 +32,7 @@ const App = () => {
         <Footer />
       </BrowserRouter>
     </>
-  )
+  );
 }
 
 export default App;

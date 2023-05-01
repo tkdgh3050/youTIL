@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "NODE_ENV=production webpack --config webpack.prod.ts",
     "analyze": "webpack-bundle-analyzer ./dist/bundle-report.json --default-sizes gzip",
-    "dev": "webpack serve --config webpack.dev.ts"
+    "dev": "webpack serve --config webpack.dev.ts",
+    "format": "prettier --cache --write .",
+    "lint": "eslint --cache --fix ."
   },
   "author": "gomsang",
   "license": "MIT",
@@ -54,9 +56,12 @@
     "@types/webpack": "^5.28.0",
     "babel-loader": "^9.1.2",
     "css-loader": "^6.7.3",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
     "faker": "^5.5.3",
     "fork-ts-checker-webpack-plugin": "^7.3.0",
     "immer": "^9.0.19",
+    "prettier": "^2.8.8",
     "react-refresh": "^0.14.0",
     "shortid": "^2.2.16",
     "style-loader": "^3.3.1",

@@ -1,6 +1,6 @@
-import axios, { AxiosError } from "axios";
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { backUrl } from "../config/config";
+import axios, { AxiosError } from 'axios';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { backUrl } from '../config/config';
 
 // axios 기본설정으로 back 서버 주소와 credential 설정
 axios.defaults.baseURL = backUrl;
@@ -20,9 +20,9 @@ export interface UserInfo {
 }
 
 // 로그인하는 action
-export const userLogin = createAsyncThunk("user/login", async (data: UserData, thunkAPI) => {
+export const userLogin = createAsyncThunk('user/login', async (data: UserData, thunkAPI) => {
   try {
-    const response = await axios.post("/user/login", data);
+    const response = await axios.post('/user/login', data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -37,9 +37,9 @@ export const userLogin = createAsyncThunk("user/login", async (data: UserData, t
 });
 
 // 로그아웃하는 action
-export const userLogout = createAsyncThunk("user/logout", async (_, thunkAPI) => {
+export const userLogout = createAsyncThunk('user/logout', async (_, thunkAPI) => {
   try {
-    await axios.post("/user/logout");
+    await axios.post('/user/logout');
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const err = error as AxiosError;
@@ -53,9 +53,9 @@ export const userLogout = createAsyncThunk("user/logout", async (_, thunkAPI) =>
 });
 
 // 회원가입하는 action
-export const userRegister = createAsyncThunk("user/register", async (data: UserData, thunkAPI) => {
+export const userRegister = createAsyncThunk('user/register', async (data: UserData, thunkAPI) => {
   try {
-    await axios.post("/user", data);
+    await axios.post('/user', data);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const err = error as AxiosError;

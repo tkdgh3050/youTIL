@@ -14,14 +14,10 @@ const TitleH2Wrapper = styled.h2`
 const Title: FunctionComponent<{ title: string }> = ({ title }) => {
   useEffect(() => {
     // 타이틀을 빈 값으로 설정 시 기본값 YouTIL 적용
-    document.title = title === '' ? 'YouTIL' : `${title} | YouTIL`
-  }, [title])
+    document.title = title === '' ? 'YouTIL' : `${title} | YouTIL`;
+  }, [title]);
 
-  return (
-    <>
-      <TitleH2Wrapper>{title}</TitleH2Wrapper>
-    </>
-  )
+  return <TitleH2Wrapper>{title}</TitleH2Wrapper>;
 };
 
 export default Title;

@@ -1,9 +1,9 @@
-import React, { } from 'react';
+import React from 'react';
 
 import { FeatureDivWrapper, LineDivWrapper, BoxDivWrapper } from './styles';
 
 // 인트로페이지 - YouTIL 특징 부분
-const FeatureSection = () => {
+function FeatureSection() {
   return (
     <FeatureDivWrapper>
       <LineDivWrapper>
@@ -45,7 +45,7 @@ const FeatureSection = () => {
         </BoxDivWrapper>
       </LineDivWrapper>
     </FeatureDivWrapper>
-  )
-};
+  );
+}
 
 export default FeatureSection;
