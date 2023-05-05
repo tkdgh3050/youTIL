@@ -5,6 +5,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import YouTube, { YouTubeEvent, YouTubeProps, YouTubePlayer } from 'react-youtube';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { useSelector } from 'react-redux';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import dialogPolyfill from 'dialog-polyfill';
 
 import BookmarkList from '../../components/bookmarkList';
 import CustomTextEditor from '../../components/customTextEditor';
@@ -55,6 +57,14 @@ function VideoView() {
     }
   }, [user]);
 
+  // useEffect(() => {
+  //   if (videoViewContinueConfirmDialogRef.current) dialogPolyfill.registerDialog(videoViewContinueConfirmDialogRef.current);
+
+  //   return () => {
+  //     if (videoViewContinueConfirmDialogRef.current?.open) videoViewContinueConfirmDialogRef.current?.close();
+  //   };
+  // }, [videoViewContinueConfirmDialogRef]);
+
   useEffect(() => {
     // 비디오 정보 로드하는 부분
     dispatch(loadVideoInfoData(queryString.current))
@@ -76,6 +86,7 @@ function VideoView() {
     // 비디오에 이전 보던 시간이 존재하는 경우 이어볼지 여부 확인하는 다이얼로그 띄우기
     if (ContinueTime && VideoHandler?.h) {
       if (ContinueTime && ContinueTime !== 0) {
+        if (videoViewContinueConfirmDialogRef.current) dialogPolyfill.registerDialog(videoViewContinueConfirmDialogRef.current);
         videoViewContinueConfirmDialogRef.current?.showModal();
       }
     }

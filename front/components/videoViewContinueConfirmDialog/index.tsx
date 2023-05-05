@@ -19,7 +19,7 @@ const VideoViewContinueConfirmDialog: FunctionComponent<Props> = ({
 }) => {
   const onClose = useCallback(() => {
     // 취소 클릭 시
-    if (videoViewContinueConfirmDialogRef.current) {
+    if (videoViewContinueConfirmDialogRef.current && videoViewContinueConfirmDialogRef.current.open) {
       videoViewContinueConfirmDialogRef.current.close();
     }
   }, [videoViewContinueConfirmDialogRef]);

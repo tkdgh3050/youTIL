@@ -19,7 +19,7 @@ const DeleteConfirmDialog: FunctionComponent<{
 
   const onClose = useCallback(() => {
     // 닫기 버튼 클릭 시 다이얼로그 닫아주는 이벤트
-    deleteConfirmDialogRef.current?.close();
+    if (deleteConfirmDialogRef.current?.open) deleteConfirmDialogRef.current?.close();
   }, [deleteConfirmDialogRef]);
 
   const onClickDeleteConfirm = useCallback(() => {
