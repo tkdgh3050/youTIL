@@ -1,6 +1,8 @@
 import React, {
   useCallback, useEffect, useRef, useState,
 } from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import dialogPolyfill from 'dialog-polyfill';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { lodePlayList } from '../../actions/note';
@@ -28,6 +30,18 @@ function MyNote() {
   const [ParamId, setParamId] = useState<number[]>([]);
   const [DeleteFlag, setDeleteFlag] = useState<DeleteFlag>('');
   const [DeleteName, setDeleteName] = useState('');
+
+  useEffect(() => {
+    if (addPlayListDialogRef.current) dialogPolyfill.registerDialog(addPlayListDialogRef.current);
+    if (addVideoListDialogRef.current) dialogPolyfill.registerDialog(addVideoListDialogRef.current);
+    if (deleteConfirmDialogRef.current) dialogPolyfill.registerDialog(deleteConfirmDialogRef.current);
+
+    return () => {
+      if (addPlayListDialogRef.current?.open) addPlayListDialogRef.current?.close();
+      if (addVideoListDialogRef.current?.open) addVideoListDialogRef.current?.close();
+      if (deleteConfirmDialogRef.current?.open) deleteConfirmDialogRef.current?.close();
+    };
+  }, [addPlayListDialogRef, addVideoListDialogRef, deleteConfirmDialogRef]);
 
   useEffect(() => {
     // 로그인 하지 않은 경우 접근하지 못하므로 로그인 페이지로 리다이렉션

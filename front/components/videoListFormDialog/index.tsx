@@ -90,7 +90,7 @@ const VideoListFormDialog: FunctionComponent<{
             alert(`동영상 추가에 오류가 발생했습니다. ${err}`);
           });
       }
-      addVideoListDialogRef.current?.close();
+      if (addVideoListDialogRef.current?.open) addVideoListDialogRef.current?.close();
     },
     [VideoName, VideoURL, addVideoListDialogRef],
   );
@@ -101,7 +101,7 @@ const VideoListFormDialog: FunctionComponent<{
     setVideoURL('');
     setVideoNameError(false);
     setVideoURLError(false);
-    addVideoListDialogRef.current?.close();
+    if (addVideoListDialogRef.current?.open) addVideoListDialogRef.current?.close();
   }, [addVideoListDialogRef, VideoName, VideoURL]);
 
   return (

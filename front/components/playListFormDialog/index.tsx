@@ -36,7 +36,7 @@ const PlayListFormDialog: FunctionComponent<{ addPlayListDialogRef: React.RefObj
 
       // 플레이리스트를 추가한 뒤 다이얼로그 닫기
       dispatch(addPlayList({ id: -1, playListName: PlayListName }));
-      addPlayListDialogRef.current?.close();
+      if (addPlayListDialogRef.current?.open) addPlayListDialogRef.current?.close();
     },
     [PlayListName, addPlayListDialogRef],
   );
@@ -45,7 +45,7 @@ const PlayListFormDialog: FunctionComponent<{ addPlayListDialogRef: React.RefObj
     // 취소 버튼 클릭 시
     setPlayListName('');
     setPlayListNameError(false);
-    addPlayListDialogRef.current?.close();
+    if (addPlayListDialogRef.current?.open) addPlayListDialogRef.current?.close();
   }, [addPlayListDialogRef]);
 
   return (
