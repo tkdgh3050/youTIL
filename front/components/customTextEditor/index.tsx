@@ -7,6 +7,8 @@ import { ContentEditableEvent } from 'react-contenteditable';
 import {
   TextEditorButton, TextEditorDiv, TextEditorDivWrapper, TextEditorHeaderDivWrapper,
 } from './styles';
+import useDebounce from '../../hooks/useDebounce';
+import DEBOUNCE_LIMIT_TIME from '../../config/constants';
 
 type Props = {
   finalTranscript: string;
@@ -18,10 +20,11 @@ type Props = {
 const CustomTextEditor: FunctionComponent<Props> = ({ finalTranscript, textNote, setTextNote }) => {
   // const [TextState, setTextState] = useState('');
   const TextStateRef = useRef<HTMLElement | null>(null);
+  const debounce = useDebounce(text => setTextNote(text), DEBOUNCE_LIMIT_TIME);
 
   const onChangeTextEditor = useCallback((e: ContentEditableEvent) => {
     // 텍스트 에디터 내부에 값이 변경될 때 마다 purify 진행한 값을 저장해주는 이벤트
-    setTextNote(DOMPurify.sanitize(e.target.value));
+    debounce(DOMPurify.sanitize(e.target.value));
   }, []);
 
   const onClickOperation = useCallback(
