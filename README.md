@@ -345,7 +345,7 @@ https://github.com/tkdgh3050/youTIL/blob/3957d6533eee0b296df56732f5a0a4a5a39037a
 **개선 결과**
 - 메인페이지의 비디오 3개를 gif에서 mp4로 변경
 - 아이콘을 지원해주는 "Font Awesome" CDN 에 defer 적용
-- FCP 약 10% 개선, LCP 약 7% 개선
+- FCP 약 20% 개선, LCP 약 29% 개선
 
 |적용 여부|lighthouse 성능지표|
 |:---:|:---:|
