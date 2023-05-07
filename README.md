@@ -1,10 +1,10 @@
 # [YouTIL] - Youtube 동영상 저장소
 
-# 목차
-- [서비스 소개](#🌟-서비스-소개)
-- [주요 기능](#🌟-주요-기능)
-- [Troubleshooting](#🌟-troubleshooting)
-- [개선사항](#🌟-개선-사항)
+# 🌟 목차
+- [서비스 소개](#서비스-소개)
+- [주요 기능](#주요-기능)
+- [Troubleshooting](#troubleshooting)
+- [개선사항](#개선-사항)
 
 
 # 🌟 서비스 소개
