@@ -17,7 +17,7 @@
 
 **서비스 링크**
 
-- [http://youtil.store](http://youtil.store)
+- ~~[http://youtil.store](http://youtil.store)~~ 과금으로 인한 운영 중단
 - 테스트 계정
     - 문의 시 전달
 - 크롬 브라우저에 최적화
